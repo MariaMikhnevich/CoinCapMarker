@@ -1,5 +1,4 @@
 div.body {
-
     div.info-and-price {
         display: flex;
         gap: 1.25rem;
@@ -10,21 +9,21 @@ div.body {
             display: flex;
             gap: 0.75rem;
             align-items: center;
-    
+
             img {
                 width: 2rem;
             }
-    
+
             div.name-and-symbol {
                 display: flex;
                 align-items: center;
                 gap: 0.25rem;
                 flex-wrap: wrap;
-    
+
                 .name {
                     font-weight: 500;
                 }
-    
+
                 .symbol {
                     color: #616e85;
                     font-weight: normal;
@@ -42,21 +41,20 @@ div.body {
         flex-wrap: wrap;
         gap: 0.25rem 1.5rem;
 
-
-
-        .quantity, .total-price {
+        .quantity,
+        .total-price {
             display: flex;
             gap: 0.625rem;
             align-items: center;
             padding-bottom: 0.625rem;
-            
+
             > div.input {
                 border-radius: 5rem;
-                background-color: #EFF2F5;
+                background-color: #eff2f5;
                 padding: 0.25rem 0.5rem 0.25rem 1rem;
 
                 input {
-                    background-color: #EFF2F5;
+                    background-color: #eff2f5;
                     width: 6.5rem;
                     padding: 0;
                 }
@@ -64,12 +62,12 @@ div.body {
 
             > div.price {
                 border-radius: 5rem;
-                background-color: #EFF2F5;
+                background-color: #eff2f5;
                 padding: 0.25rem 1rem;
                 box-sizing: content-box;
                 min-width: 6.5rem;
             }
-        }    
+        }
     }
 
     div.advice {
@@ -96,6 +94,4 @@ div.body {
             }
         }
     }
-
-
 }

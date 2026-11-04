@@ -28,6 +28,10 @@ yarn-error.log
 !.vscode/extensions.json
 .history/*
 
+# Local environment files with the real API key (template: environment.example.ts)
+/src/environments/environment.ts
+/src/environments/environment.development.ts
+
 # Miscellaneous
 /.angular/cache
 .sass-cache/

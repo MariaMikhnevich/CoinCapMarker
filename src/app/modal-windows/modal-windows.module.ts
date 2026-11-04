@@ -4,20 +4,13 @@ import { ModalBriefcaseComponent } from './modal-briefcase/modal-briefcase.compo
 import { ModalAddCoinInBriefcaseComponent } from './modal-add-coin-in-briefcase/modal-add-coin-in-briefcase.component';
 import { ModalWindowsComponent } from './modal-windows.component';
 
-
-
 @NgModule({
-  declarations: [
-    ModalBriefcaseComponent,
-    ModalAddCoinInBriefcaseComponent,
-    ModalWindowsComponent,
-  ],
-  imports: [
-    CommonModule
-  ],
-  exports: [
-    ModalWindowsComponent,
-    ModalAddCoinInBriefcaseComponent
-  ]
+    declarations: [
+        ModalBriefcaseComponent,
+        ModalAddCoinInBriefcaseComponent,
+        ModalWindowsComponent,
+    ],
+    imports: [CommonModule],
+    exports: [ModalWindowsComponent, ModalAddCoinInBriefcaseComponent],
 })
-export class ModalWindowsModule { }
+export class ModalWindowsModule {}

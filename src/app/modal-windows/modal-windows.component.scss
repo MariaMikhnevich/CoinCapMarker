@@ -4,10 +4,10 @@ div.model-briefcase {
     right: 0;
     bottom: 0;
     left: 0;
-    background: rgba(0,0,0,0.5);
+    background: rgba(0, 0, 0, 0.5);
     z-index: 10;
     opacity: 0;
-    -webkit-transition: opacity 200ms ease-in; 
+    -webkit-transition: opacity 200ms ease-in;
     -moz-transition: opacity 200ms ease-in;
     transition: opacity 200ms ease-in;
     pointer-events: none;
@@ -16,13 +16,13 @@ div.model-briefcase {
 
     &.visible-briefcase {
         opacity: 1;
-        pointer-events: auto; 
+        pointer-events: auto;
         overflow-y: auto;
         z-index: 1050;
 
         .modal-dialog {
             .modal-content {
-            display: flex;
+                display: flex;
             }
         }
     }
@@ -46,8 +46,8 @@ div.model-briefcase {
             background-color: #fff;
             -webkit-background-clip: padding-box;
             background-clip: padding-box;
-            border: 1px solid rgba(0,0,0,.2);
-            border-radius: .3rem;
+            border: 1px solid rgba(0, 0, 0, 0.2);
+            border-radius: 0.3rem;
             outline: 0;
 
             .modal-header {
@@ -65,8 +65,8 @@ div.model-briefcase {
                 justify-content: space-between;
                 padding: 15px;
                 border-bottom: 1px solid #eceeef;
-                pointer-events: auto; 
-    
+                pointer-events: auto;
+
                 .modal-title {
                     margin-top: 0;
                     margin-bottom: 0;
@@ -83,26 +83,27 @@ div.model-briefcase {
                     line-height: 1;
                     color: #000;
                     text-shadow: 0 1px 0 #fff;
-                    opacity: .5;
+                    opacity: 0.5;
                     text-decoration: none;
 
-                    &:focus, &:hover {
+                    &:focus,
+                    &:hover {
                         color: #000;
                         text-decoration: none;
                         cursor: pointer;
-                        opacity: .75;
+                        opacity: 0.75;
                     }
                 }
             }
 
             .modal-body {
                 position: relative;
-                  -webkit-box-flex: 1;
-                  -webkit-flex: 1 1 auto;
-                  -ms-flex: 1 1 auto;
-                  flex: 1 1 auto;
-                  padding: 1rem;
-                  overflow: auto;
+                -webkit-box-flex: 1;
+                -webkit-flex: 1 1 auto;
+                -ms-flex: 1 1 auto;
+                flex: 1 1 auto;
+                padding: 1rem;
+                overflow: auto;
             }
         }
     }
@@ -116,8 +117,8 @@ div.model-briefcase {
 
     @media (min-width: 768px) {
         .modal-content {
-            -webkit-box-shadow: 0 5px 15px rgba(0,0,0,.5);
-            box-shadow: 0 5px 15px rgba(0,0,0,.5);
+            -webkit-box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
         }
     }
 }

@@ -9,7 +9,6 @@ main {
         align-items: flex-start;
 
         > button.go-back {
-    
             a {
                 text-decoration: none;
                 img {
@@ -36,23 +35,23 @@ main {
                     > img {
                         width: 5rem;
                     }
-        
+
                     > div {
                         display: grid;
                         justify-items: flex-start;
                         gap: 0.125rem;
-        
+
                         > div.name-and-symbol {
                             display: flex;
                             align-items: center;
                             gap: 0.25rem;
                             flex-wrap: wrap;
-                            
+
                             .name {
                                 font-size: 1.25rem;
                                 font-weight: 600;
                             }
-        
+
                             .symbol {
                                 color: #616e85;
                                 position: relative;
@@ -67,33 +66,29 @@ main {
                     gap: 0.5rem;
                     align-items: center;
                     flex-wrap: wrap;
-    
+
                     .price-usd {
                         line-height: normal;
                         font-size: 2rem;
                         font-weight: 600;
                     }
-    
+
                     .change-percent-24hr {
                         font-weight: 600;
-    
+
                         &.negative {
-                            color: #EA3943;
+                            color: #ea3943;
                         }
-    
+
                         &.positive {
-                            color: #16C784;
+                            color: #16c784;
                         }
                     }
                 }
-    
- 
             }
-        
+
             div.price {
                 display: grid;
-    
-                
             }
         }
 

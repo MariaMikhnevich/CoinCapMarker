@@ -1,28 +1,13 @@
-import { HttpClient } from "@angular/common/http";
-import { Injectable } from "@angular/core";
-import { map, Observable } from "rxjs";
-import { Coin } from "../classes/coin.class";
+import { Injectable, inject } from '@angular/core';
+import { Observable } from 'rxjs';
+import { Coin } from '../classes/coin.class';
+import { COINS_DATA_PROVIDER } from '../../core/data-provider/data-provider.token';
 
 @Injectable()
-export class CointInfoService {
-    constructor(private http: HttpClient) {
-    }
+export class CoinInfoService {
+    private readonly provider = inject(COINS_DATA_PROVIDER);
 
     public getCoinInfo(id: string): Observable<Coin> {
-        return this.http.get(`https://api.coincap.io/v2/assets/${id}`).pipe(map((data:any)=>{
-            let coin = data["data"];
-            return new Coin(
-                    coin.id, 
-                    coin.rank,
-                    `https://assets.coincap.io/assets/icons/${coin.symbol.toLowerCase()}@2x.png`, 
-                    coin.symbol, 
-                    coin.name,
-                    coin.priceUsd,
-                    coin.marketCapUsd, 
-                    coin.changePercent24Hr,
-                    coin.supply,
-                    coin.maxSupply,
-                    )
-        }));   
+        return this.provider.getAsset(id);
     }
 }

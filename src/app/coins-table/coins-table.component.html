@@ -1,23 +1,31 @@
-<div *ngIf="error; else table">
-    <error [error]="error"></error>
-</div>
-<ng-template #table>
-    <modal-windows [isVisible]="isVisibleModalAddCoin" [coin]="coinTransferredByModal" (onClose)="closeModal()"></modal-windows>
+@if (error) {
+    <div>
+        <error [error]="error"></error>
+    </div>
+} @else {
+    <modal-windows
+        [isVisible]="isVisibleModalAddCoin"
+        [coin]="coinTransferredByModal"
+        (closed)="closeModal()"
+    ></modal-windows>
     <div class="container-table">
         <loading-indicator></loading-indicator>
-
-        <coin-search [allCoins]="allCoins" (onChangedDesiredСoin)="coinsChange($event)"></coin-search>
-
-        <div class="pagination-top" [ngClass]="{'hide-when-searching': searchMode}">
-            <div class="show-rows">Show rows 
+        <coin-search [allCoins]="allCoins" (desiredCoinChanged)="coinsChange($event)"></coin-search>
+        <div class="pagination-top" [ngClass]="{ 'hide-when-searching': searchMode }">
+            <div class="show-rows">
+                Show rows
                 <select name="rows" id="rows" (change)="changeTableSize($event)">
                     <option value="100">100</option>
                     <option value="200">200</option>
                 </select>
             </div>
             <div class="pagination">
-                <pagination-controls previousLabel="Prev" nextLabel="Next" (pageChange)="onTableDataChange($event)" (click)="scrollToTop()">
-            
+                <pagination-controls
+                    previousLabel="Prev"
+                    nextLabel="Next"
+                    (pageChange)="onTableDataChange($event)"
+                    (click)="scrollToTop()"
+                >
                 </pagination-controls>
             </div>
         </div>
@@ -32,30 +40,45 @@
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let coin of coins | paginate:{itemsPerPage: tableSize, currentPage: page, totalItems: count}; let i index" (click)="moreDetailed(coin.id)">
-                    <td class="logo-and-name">
-                        <img src="{{coin.logo}}" alt="">
-                        <div class="name-and-symbol">
-                            <span class="name">{{coin.name}}</span>
-                            <span class="symbol">{{coin.symbol}}</span>
-                        </div>
-                    </td>
-                    <td>{{coin.priceUsd | currency: 'CAD' : 'symbol-narrow' : '.2-2'}}</td>
-                    <td class="change-percent-24hr" [ngClass]="{'negative': +coin.changePercent24Hr < 0, 'positive': +coin.changePercent24Hr > 0}">{{coin.changePercent24Hr | number: '.2-2'}}%</td>
-                    <td>{{coin.marketCapUsd | currency: 'CAD' : 'symbol-narrow' : '4.2-2'}}</td>
-                    <td><button class="add" (click)="addCoin($event, coin)">Add</button></td>
-                </tr>
+                @for (
+                    coin of displayedCoins
+                        | paginate: { itemsPerPage: tableSize, currentPage: page, totalItems: count };
+                    track coin
+                ) {
+                    <tr (click)="moreDetailed(coin.id)">
+                        <td class="logo-and-name">
+                            <img src="{{ coin.logo }}" alt="" />
+                            <div class="name-and-symbol">
+                                <span class="name">{{ coin.name }}</span>
+                                <span class="symbol">{{ coin.symbol }}</span>
+                            </div>
+                        </td>
+                        <td>{{ coin.priceUsd | currency: 'CAD' : 'symbol-narrow' : '.2-2' }}</td>
+                        <td
+                            class="change-percent-24hr"
+                            [ngClass]="{ negative: +coin.changePercent24Hr < 0, positive: +coin.changePercent24Hr > 0 }"
+                        >
+                            {{ coin.changePercent24Hr | number: '.2-2' }}%
+                        </td>
+                        <td>{{ coin.marketCapUsd | currency: 'CAD' : 'symbol-narrow' : '4.2-2' }}</td>
+                        <td><button class="add" (click)="addCoin($event, coin)">Add</button></td>
+                    </tr>
+                }
             </tbody>
         </table>
-        <div class="pagination" [ngClass]="{'hide-when-searching': searchMode}">
-            <pagination-controls previousLabel="Prev" nextLabel="Next" (pageChange)="onTableDataChange($event)" (click)="scrollToTop()">
-        
+        <div class="pagination" [ngClass]="{ 'hide-when-searching': searchMode }">
+            <pagination-controls
+                previousLabel="Prev"
+                nextLabel="Next"
+                (pageChange)="onTableDataChange($event)"
+                (click)="scrollToTop()"
+            >
             </pagination-controls>
         </div>
     </div>
-    <div class="scroll-to-top" [ngClass]="{'show-scrollTop': windowScrolled}">
+    <div class="scroll-to-top" [ngClass]="{ 'show-scrollTop': windowScrolled }">
         <button (click)="scrollToTop()">
-            <i class="fa fa-chevron-up"><img src="assets/img/top-up3.png" alt=""></i>
+            <i class="fa fa-chevron-up"><img src="assets/img/top-up3.png" alt="" /></i>
         </button>
     </div>
-</ng-template>
+}

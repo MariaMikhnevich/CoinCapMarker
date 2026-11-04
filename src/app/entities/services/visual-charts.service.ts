@@ -1,43 +1,47 @@
-import { Injectable } from "@angular/core";
+import { Injectable } from '@angular/core';
 
 @Injectable()
 export class VisualChartsService {
     public getChartOptions(name: string, chartPoints: number[][], unit: [string, number[]]) {
-        return  {
+        return {
             title: {
-              text: 'Price change chart'
+                text: 'Price change chart',
             },
 
             tooltip: {
-              shared: true,
-              useHTML: true,
-              headerFormat: '<table><tr><th colspan="2">{point.key}</th></tr>',
-              pointFormat: '<tr><td style="color: {series.color}; font-weight: 900; text-shadow: {series.color} 0px 1px 1px;">{series.name}: ' +
-                  '</td>' +
-                  '<td style="text-align: right; font-weight: 900"><b>${point.y}</b></td></tr>',
-              footerFormat: '</table>',
-          },
+                shared: true,
+                useHTML: true,
+                headerFormat: '<table><tr><th colspan="2">{point.key}</th></tr>',
+                pointFormat:
+                    '<tr><td style="color: {series.color}; font-weight: 900; text-shadow: {series.color} 0px 1px 1px;">{series.name}: ' +
+                    '</td>' +
+                    // eslint-disable-next-line no-template-curly-in-string -- Highcharts replaces the {point.y} token; the leading `$` is a literal dollar sign
+                    '<td style="text-align: right; font-weight: 900"><b>${point.y}</b></td></tr>',
+                footerFormat: '</table>',
+            },
             chart: {
-              zooming: {
-                  type: 'x'
-              },
+                zooming: {
+                    type: 'x',
+                },
             },
             xAxis: {
                 type: 'datetime',
-                minRange: 1000 * 60 * 60, 
-                units: [unit]
+                minRange: 1000 * 60 * 60,
+                units: [unit],
             },
             yAxis: {
-              title:{
-                text: 'Price, USD',
-                margin: 25
-              }
+                title: {
+                    text: 'Price, USD',
+                    margin: 25,
+                },
             },
-            series: [{
-              name: name,
-              type: 'line',
-              data: chartPoints
-            }]
-          }
+            series: [
+                {
+                    name,
+                    type: 'line',
+                    data: chartPoints,
+                },
+            ],
+        };
     }
 }

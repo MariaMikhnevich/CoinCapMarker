@@ -4,11 +4,11 @@
     right: 1rem;
     opacity: 0;
     z-index: 10;
-    transition: all .2s ease-in-out;
+    transition: all 0.2s ease-in-out;
 
     &.show-scrollTop {
         opacity: 1;
-        transition: all .2s ease-in-out;  
+        transition: all 0.2s ease-in-out;
     }
 
     button {
@@ -47,19 +47,20 @@ div.container-table {
         overflow-x: auto;
         position: relative;
 
-    
         tr {
             border-bottom: 1px solid #eceeef;
 
-            td, th {
+            td,
+            th {
                 padding: 0.5rem;
             }
-    
+
             th {
                 text-align: right;
                 font-size: 0.75rem;
 
-                &:nth-of-type(1), th:nth-of-type(1) {
+                &:nth-of-type(1),
+                th:nth-of-type(1) {
                     text-align: left;
                 }
 
@@ -67,8 +68,9 @@ div.container-table {
                     cursor: pointer;
                 }
             }
-    
-            td:nth-of-type(1), th:nth-of-type(1) {
+
+            td:nth-of-type(1),
+            th:nth-of-type(1) {
                 position: sticky;
                 left: 0;
                 background-color: white;
@@ -82,7 +84,7 @@ div.container-table {
                 align-items: center;
                 gap: 0.5rem;
                 flex-wrap: wrap;
-        
+
                 img {
                     width: 1.5rem;
                 }
@@ -92,7 +94,7 @@ div.container-table {
                     align-items: center;
                     gap: 0.25rem;
                     flex-wrap: wrap;
-    
+
                     .symbol {
                         color: #616e85;
                         font-weight: normal;
@@ -101,16 +103,15 @@ div.container-table {
             }
 
             .change-percent-24hr {
-
                 &.negative {
-                    color: #EA3943;
+                    color: #ea3943;
                 }
 
                 &.positive {
-                    color: #16C784;
+                    color: #16c784;
                 }
             }
-        }  
+        }
 
         tbody > tr {
             cursor: pointer;
@@ -132,7 +133,7 @@ div.container-table {
     div.container-table {
         div.pagination-top {
             div.pagination {
-                font-size: 0.75rem;                
+                font-size: 0.75rem;
             }
         }
         table {
