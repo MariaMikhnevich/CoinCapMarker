@@ -1,0 +1,42 @@
+{
+    "editor.tabSize": 4,
+    "editor.detectIndentation": false,
+    "editor.renderWhitespace": "all",
+    "files.trimTrailingWhitespace": true,
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+        "source.fixAll": "explicit",
+        "source.fixAll.eslint": "explicit"
+    },
+    "eslint.validate": ["typescript", "javascript", "html"],
+    "stylelint.validate": ["css", "postcss", "scss"],
+    "typescript.suggest.autoImports": false,
+    "javascript.suggest.autoImports": false,
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "cSpell.words": [
+        "annot",
+        "annots",
+        "chargebee",
+        "cloudinary",
+        "fastify",
+        "konva",
+        "mergeable",
+        "mrkdwn",
+        "nestjs",
+        "picklist",
+        "punctuationless",
+        "terragrunt",
+        "typeorm"
+    ],
+    "[python]": {
+        "editor.defaultFormatter": "ms-python.autopep8"
+    },
+    "typescript.tsdk": "node_modules/typescript/lib",
+    "[terraform][terraform-vars]": {
+        "editor.defaultFormatter": "hashicorp.terraform",
+        "editor.formatOnSave": false,
+        "editor.codeActionsOnSave": {
+            "source.formatAll.terraform": "explicit"
+        }
+    }
+}

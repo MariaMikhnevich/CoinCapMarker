@@ -3,34 +3,37 @@ import { CoinInBriefcase } from '../entities/classes/coin-in-briefcase.class';
 import { Coin } from '../entities/classes/coin.class';
 
 @Component({
-  selector: 'modal-windows',
-  templateUrl: './modal-windows.component.html',
-  styleUrls: ['./modal-windows.component.scss']
+    selector: 'modal-windows',
+    templateUrl: './modal-windows.component.html',
+    styleUrls: ['./modal-windows.component.scss'],
+    standalone: false,
 })
 export class ModalWindowsComponent implements OnChanges {
-  @Input() isVisible: boolean = false;
-  @Input() coin: Coin | null = null;
-  @Input() briefcase: CoinInBriefcase[] | null = null;
-  public title: string = '';
+    @Input() isVisible: boolean = false;
 
-  @Output() onClose = new EventEmitter<boolean>();
+    @Input() coin: Coin | null = null;
 
-  close() {
-    this.onClose.emit(false);
-  }
+    @Input() briefcase: CoinInBriefcase[] | null = null;
 
-  interception(event: Event) {
-    event.stopPropagation();
-  }
+    public title: string = '';
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['coin']) {
-      this.title = 'Add Coin';
-    } else if (changes['briefcase']) {
-      this.title = 'Your Briefcase';
-    } else {
-      this.title = '';
+    @Output() closed = new EventEmitter<boolean>();
+
+    close() {
+        this.closed.emit(false);
     }
 
-  }
+    interception(event: Event) {
+        event.stopPropagation();
+    }
+
+    ngOnChanges(changes: SimpleChanges): void {
+        if (changes['coin']) {
+            this.title = 'Add Coin';
+        } else if (changes['briefcase']) {
+            this.title = 'Your Briefcase';
+        } else {
+            this.title = '';
+        }
+    }
 }

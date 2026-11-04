@@ -1,22 +1,24 @@
 import { AsyncPipe, CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, Input, inject } from '@angular/core';
 import { Observable } from 'rxjs';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { LoadingService } from '../entities/services/loading.service';
-import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 @Component({
-  selector: "loading-indicator",
-  templateUrl: "./loading-indicator.component.html",
-  styleUrls: ["./loading-indicator.component.scss"],
-  imports: [MatProgressSpinnerModule, AsyncPipe, CommonModule],
-  standalone: true,
+    selector: 'loading-indicator',
+    templateUrl: './loading-indicator.component.html',
+    styleUrls: ['./loading-indicator.component.scss'],
+    imports: [MatProgressSpinnerModule, AsyncPipe, CommonModule],
 })
 export class LoadingIndicatorComponent {
-  loading$: Observable<boolean>;
-  @Input()
-  detectRouteTransitions = false;
-  constructor(
-  public loadingService: LoadingService) {
-    this.loading$ = this.loadingService.loading$;
-  }
+    loadingService = inject(LoadingService);
+
+    loading$: Observable<boolean>;
+
+    @Input()
+    detectRouteTransitions = false;
+
+    constructor() {
+        this.loading$ = this.loadingService.loading$;
+    }
 }

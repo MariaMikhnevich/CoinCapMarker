@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { CoinInBriefcase } from '../entities/classes/coin-in-briefcase.class';
@@ -7,47 +7,62 @@ import { CoinsInBriefcaseService } from '../entities/services/coins-in-briefcase
 import { CoinsService } from '../entities/services/coins.service';
 
 @Component({
-  selector: 'app-header',
-  templateUrl: './header.component.html',
-  styleUrls: ['./header.component.scss']
+    selector: 'app-header',
+    templateUrl: './header.component.html',
+    styleUrls: ['./header.component.scss'],
+    standalone: false,
 })
 export class HeaderComponent implements OnInit, OnDestroy {
-  public topCoins!: Coin[];
-  public differenceValue: BehaviorSubject<number>;
-  public percentageDifferenceValue: BehaviorSubject<number>;
-  public briefcaseValue: Observable<number>;
-  public briefcase: CoinInBriefcase[] | null = null;
-  private subscription!: Subscription;
-  isVisualBriefcase: boolean = false;
+    private coinsService = inject(CoinsService);
 
-  constructor(
-    private coinsService: CoinsService,
-    private router: Router,
-    private coinsInBriefcaseService: CoinsInBriefcaseService){
-      this.briefcaseValue = this.coinsInBriefcaseService.briefcaseValue;
-      this.differenceValue = this.coinsInBriefcaseService.differenceInValueOfCoins;
-      this.percentageDifferenceValue = this.coinsInBriefcaseService.percentageDifferenceInValueOfCoins;
+    private router = inject(Router);
+
+    private coinsInBriefcaseService = inject(CoinsInBriefcaseService);
+
+    public topCoins!: Coin[];
+
+    public differenceValue: BehaviorSubject<number>;
+
+    public percentageDifferenceValue: BehaviorSubject<number>;
+
+    public briefcaseValue: Observable<number>;
+
+    public briefcase: CoinInBriefcase[] | null = null;
+
+    private subscription!: Subscription;
+
+    isVisualBriefcase: boolean = false;
+
+    constructor() {
+        this.briefcaseValue = this.coinsInBriefcaseService.briefcaseValue;
+        this.differenceValue = this.coinsInBriefcaseService.differenceInValueOfCoins;
+        this.percentageDifferenceValue =
+            this.coinsInBriefcaseService.percentageDifferenceInValueOfCoins;
     }
 
-  ngOnInit(): void {
-    this.subscription = this.coinsService.getCoins(3).subscribe({next:(data: Coin[]) => this.topCoins = data});
-  }
-  
-  moreDetailed(id: string){
-    this.router.navigate([`/coins/${id}`]);
-  }
+    ngOnInit(): void {
+        this.subscription = this.coinsService.getTopCoins(3).subscribe({
+            next: (data: Coin[]) => {
+                this.topCoins = data;
+            },
+        });
+    }
 
-  openBriefcase() {
-    this.briefcase = this.coinsInBriefcaseService.getBriefcase;
-    this.isVisualBriefcase = true;
-  }
+    moreDetailed(id: string) {
+        this.router.navigate([`/coins/${id}`]);
+    }
 
-  closeBriefcase() {
-    this.briefcase = null;
-    this.isVisualBriefcase = false;
-  }
-  
-  ngOnDestroy(): void {
-    this.subscription.unsubscribe();
-  }
+    openBriefcase() {
+        this.briefcase = this.coinsInBriefcaseService.getBriefcase;
+        this.isVisualBriefcase = true;
+    }
+
+    closeBriefcase() {
+        this.briefcase = null;
+        this.isVisualBriefcase = false;
+    }
+
+    ngOnDestroy(): void {
+        this.subscription.unsubscribe();
+    }
 }

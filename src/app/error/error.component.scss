@@ -23,7 +23,6 @@ main {
         }
 
         .error-message-and-go-back {
-
             display: flex;
             flex-direction: column;
             gap: 1.25rem;
@@ -31,14 +30,13 @@ main {
 
             a {
                 text-decoration: none;
-    
+
                 font-weight: 500;
                 color: white;
 
                 button.go-back {
                     padding: 0.25rem 1.75rem;
                     background-color: #2c3e50;
-    
                 }
             }
         }

@@ -2,11 +2,14 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, Input } from '@angular/core';
 
 @Component({
-  selector: 'error',
-  templateUrl: './error.component.html',
-  styleUrls: ['./error.component.scss']
+    selector: 'error',
+    templateUrl: './error.component.html',
+    styleUrls: ['./error.component.scss'],
+    standalone: false,
 })
 export class ErrorComponent {
-  @Input() error: HttpErrorResponse = new HttpErrorResponse({status: 404, error: {error: 'Page not be found.'}});
-
+    @Input() error: HttpErrorResponse = new HttpErrorResponse({
+        status: 404,
+        error: { error: 'Page not be found.' },
+    });
 }

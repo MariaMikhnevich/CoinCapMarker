@@ -1,84 +1,90 @@
-import { Injectable } from "@angular/core";
-import { BehaviorSubject } from "rxjs";
-import { CoinInBriefcase } from "../classes/coin-in-briefcase.class";
-import { Coin } from "../classes/coin.class";
-import { CointInfoService } from "./coin-info.service";
+import { Injectable, inject } from '@angular/core';
+import { BehaviorSubject, map, of, switchMap } from 'rxjs';
+import { COINS_DATA_PROVIDER } from '../../core/data-provider/data-provider.token';
+import { CoinInBriefcase } from '../classes/coin-in-briefcase.class';
+import { Coin } from '../classes/coin.class';
+import { CoinsService } from './coins.service';
 
 @Injectable()
 export class CoinsInBriefcaseService {
-    public currentCoins: Coin[] = [];
-    private _briefcase: CoinInBriefcase[];
-    private _difference = new BehaviorSubject<number>(0);
-    private _percentageDifference = new BehaviorSubject<number>(0);
-    private _briefcaseValue = new BehaviorSubject<number>(0);
+    private coinsService = inject(CoinsService);
 
-    constructor(private cointInfoService: CointInfoService) {
+    private readonly provider = inject(COINS_DATA_PROVIDER);
+
+    public currentCoins: Coin[] = [];
+
+    #briefcase: CoinInBriefcase[];
+
+    #difference = new BehaviorSubject<number>(0);
+
+    #percentageDifference = new BehaviorSubject<number>(0);
+
+    #briefcaseValue = new BehaviorSubject<number>(0);
+
+    constructor() {
         const briefcaseFromLocalStorage = localStorage.getItem('briefcase');
         if (briefcaseFromLocalStorage === null) {
             localStorage.setItem('briefcase', JSON.stringify([]));
-            this._briefcase = [];
+            this.#briefcase = [];
         } else {
-            this._briefcase = JSON.parse(briefcaseFromLocalStorage);
-            this._briefcaseValue.next(this.getBriefcaseValue());
+            this.#briefcase = JSON.parse(briefcaseFromLocalStorage);
+            this.#briefcaseValue.next(this.getBriefcaseValue());
         }
         this.getCurrentCoins();
     }
 
     get getBriefcase(): CoinInBriefcase[] {
-        return this._briefcase;
+        return this.#briefcase;
     }
 
     get briefcaseValue(): BehaviorSubject<number> {
-        return this._briefcaseValue;
+        return this.#briefcaseValue;
     }
 
     get differenceInValueOfCoins(): BehaviorSubject<number> {
-        return this._difference;
+        return this.#difference;
     }
 
     get percentageDifferenceInValueOfCoins(): BehaviorSubject<number> {
-        return this._percentageDifference;
+        return this.#percentageDifference;
     }
 
     addCoin(coin: Coin, quantity: number) {
-        this._briefcase.push(new CoinInBriefcase(coin, quantity, Date.now()));
-        localStorage.setItem('briefcase', JSON.stringify(this._briefcase));
+        this.#briefcase.push(new CoinInBriefcase(coin, quantity, Date.now()));
+        localStorage.setItem('briefcase', JSON.stringify(this.#briefcase));
 
-        this._briefcaseValue.next(this.getBriefcaseValue());
+        this.#briefcaseValue.next(this.getBriefcaseValue());
 
-        if (!this.currentCoins.find((currentCoin: Coin) => {
-            return currentCoin.id === coin.id;
-        })) this.currentCoins.push(coin);
+        if (!this.currentCoins.find((currentCoin: Coin) => currentCoin.id === coin.id))
+            this.currentCoins.push(coin);
         this.updateDifference();
     }
 
     removeCoin(coinInBriefcase: CoinInBriefcase) {
-        const indexCoin = this._briefcase.findIndex((coin: CoinInBriefcase) => {
-            return coin.timeAddition === coinInBriefcase.timeAddition;
-        });
-        if (indexCoin + 1){
-            this._briefcase.splice(indexCoin, 1);
-            localStorage.setItem('briefcase', JSON.stringify(this._briefcase));
+        const indexCoin = this.#briefcase.findIndex(
+            (currentCoin: CoinInBriefcase) =>
+                currentCoin.timeAddition === coinInBriefcase.timeAddition,
+        );
+        if (indexCoin !== -1) {
+            this.#briefcase.splice(indexCoin, 1);
+            localStorage.setItem('briefcase', JSON.stringify(this.#briefcase));
 
-            this._briefcaseValue.next(this.getBriefcaseValue());
+            this.#briefcaseValue.next(this.getBriefcaseValue());
             this.updateDifference();
-        }  else console.log('Не найден');
-
+        }
     }
 
-    getCurrentCoinPrice(id: string):  string{
-        const coin = this.currentCoins.find((coin: Coin) => coin.id === id);
+    getCurrentCoinPrice(id: string): string {
+        const coin = this.currentCoins.find((currentCoin: Coin) => currentCoin.id === id);
         if (!coin) return '';
         return coin.priceUsd;
     }
 
     private getCurrentCoins() {
-        let arrayId: string[] = [];
-        this._briefcase.forEach((coinInBriefcase) => {
-            if (arrayId.find((id: string) => {
-                return id === coinInBriefcase.coin.id
-            })) return;
-            else arrayId.push(coinInBriefcase.coin.id);
+        const arrayId: string[] = [];
+        this.#briefcase.forEach((coinInBriefcase) => {
+            if (arrayId.find((id: string) => id === coinInBriefcase.coin.id)) return;
+            arrayId.push(coinInBriefcase.coin.id);
         });
         arrayId.forEach((id) => {
             this.fillCurrentCoinsWithNewCoin(id);
@@ -86,30 +92,42 @@ export class CoinsInBriefcaseService {
     }
 
     private fillCurrentCoinsWithNewCoin(id: string) {
-        this.cointInfoService.getCoinInfo(id).subscribe({
-            next: (data: Coin) => {
-                this.currentCoins.push(data)
-                this.updateDifference();
-            }
-        })
+        // Prices come from the shared cached assets list; only coins outside
+        // that list (beyond the top 2000) trigger an individual request.
+        this.coinsService
+            .getAssets()
+            .pipe(
+                map((coins) => coins.find((coin) => coin.id === id)),
+                switchMap((coin) => (coin ? of(coin) : this.provider.getAsset(id))),
+            )
+            .subscribe({
+                next: (data: Coin) => {
+                    this.currentCoins.push(data);
+                    this.updateDifference();
+                },
+                // briefcase prices stay at their saved values if data cannot be fetched
+                error: () => {},
+            });
     }
 
     private updateDifference() {
         const value = this.currentCoins.reduce((acc: number, coin: Coin) => {
-            let quantity = this._briefcase.filter((coinInBriefcase) => {
-                return coinInBriefcase.coin.id === coin.id;
-            }).reduce((quantity: number, coinInBriefcase) => {
-                return quantity + coinInBriefcase.quantity;
-            }, 0)
+            const quantity = this.#briefcase
+                .filter((coinInBriefcase) => coinInBriefcase.coin.id === coin.id)
+                .reduce((total: number, coinInBriefcase) => total + coinInBriefcase.quantity, 0);
             return acc + +coin.priceUsd * quantity;
         }, 0);
-        this._difference.next(value - this.getBriefcaseValue());
-        this._percentageDifference.next((value - this.getBriefcaseValue()) / this.getBriefcaseValue());
+        this.#difference.next(value - this.getBriefcaseValue());
+        this.#percentageDifference.next(
+            (value - this.getBriefcaseValue()) / this.getBriefcaseValue(),
+        );
     }
 
     private getBriefcaseValue(): number {
-        return this._briefcase.reduce((briefcaseValue: number, coinInBriefcase) => {
-            return briefcaseValue + +coinInBriefcase.coin.priceUsd * coinInBriefcase.quantity;
-        }, 0);
+        return this.#briefcase.reduce(
+            (briefcaseValue: number, coinInBriefcase) =>
+                briefcaseValue + +coinInBriefcase.coin.priceUsd * coinInBriefcase.quantity,
+            0,
+        );
     }
 }
