@@ -3,6 +3,7 @@ import { Injectable, inject } from '@angular/core';
 import { map, type Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { Coin } from '../../../entities/classes/coin.class';
+import { toChartPoint } from '../chart-point.util';
 import type { ChartPoint, CoinsDataProvider } from '../coins-data-provider';
 import type {
     CoinCapAssetDto,
@@ -48,10 +49,7 @@ export class CoinCapV3Provider implements CoinsDataProvider {
             .get<CoinCapHistoryResponse>(`${this.apiUrl}/assets/${id}/history`, { params })
             .pipe(
                 map(({ data }) =>
-                    data.map((point) => [
-                        this.toChartTime(point.time),
-                        this.toChartPrice(+point.priceUsd),
-                    ]),
+                    data.map((point) => toChartPoint(point.time, +point.priceUsd)),
                 ),
             );
     }
@@ -73,19 +71,5 @@ export class CoinCapV3Provider implements CoinsDataProvider {
             dto.supply ?? '',
             dto.maxSupply ?? '',
         );
-    }
-
-    private toChartTime(time: number): number {
-        return Math.floor(+time / 1000) * 1000 + -new Date(time).getTimezoneOffset() * 60 * 1000;
-    }
-
-    private toChartPrice(price: number): number {
-        if (price < 0.1) {
-            return +price.toFixed(5);
-        }
-        if (price < 10) {
-            return +price.toFixed(4);
-        }
-        return +price.toFixed(2);
     }
 }

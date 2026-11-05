@@ -1,11 +1,40 @@
-- name: Generate environment.prod.ts
-  env:
-      COINCAP_API_KEY: ${{ secrets.COINCAP_API_KEY }}
-  run: |
-      echo "export const environment = { production: true, \
-        apiUrl: 'https://rest.coincap.io/v3', apiKey: '$COINCAP_API_KEY' };" \
-        > src/environments/environment.prod.ts
+name: Deploy to GitHub Pages
 
-- run: npm ci
-- run: npm run build -- --configuration production
-- uses: angular-cli-ghpages@v1 # или actions/deploy-pages
+on:
+    push:
+        branches: [main]
+    workflow_dispatch:
+
+concurrency:
+    group: pages
+    cancel-in-progress: true
+
+jobs:
+    deploy:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+
+            - uses: actions/setup-node@v4
+              with:
+                  node-version: 22
+                  cache: npm
+
+            # The real environment files are git-ignored; rebuild the
+            # production one from repository secrets at build time.
+            - name: Generate environment.ts
+              env:
+                  COINCAP_API_KEY: ${{ secrets.COINCAP_API_KEY }}
+                  COINGECKO_API_KEY: ${{ secrets.COINGECKO_API_KEY }}
+              run: |
+                  printf "export const environment = {\n  production: true,\n  coincap: { apiUrl: 'https://rest.coincap.io/v3', apiKey: '%s' },\n  coingecko: { apiUrl: 'https://api.coingecko.com/api/v3', apiKey: '%s' },\n};\n" "$COINCAP_API_KEY" "$COINGECKO_API_KEY" > src/environments/environment.ts
+
+            - run: npm ci
+            - run: npm run build
+
+            - name: Deploy to GitHub Pages
+              uses: angular-cli-ghpages@v1
+              with:
+                  github-token: ${{ secrets.GITHUB_TOKEN }}
+                  dir: dist/coincapmarker/browser
+                  base-href: /CoinCapMarker/
