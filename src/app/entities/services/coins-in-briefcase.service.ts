@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { BehaviorSubject, map, of, switchMap } from 'rxjs';
 import { COINS_DATA_PROVIDER } from '../../core/data-provider/data-provider.token';
 import { CoinInBriefcase } from '../classes/coin-in-briefcase.class';
-import { Coin } from '../classes/coin.class';
+import type { Coin } from '../classes/coin.class';
 import { CoinsService } from './coins.service';
 
 @Injectable()
@@ -49,7 +49,7 @@ export class CoinsInBriefcaseService {
         return this.#percentageDifference;
     }
 
-    addCoin(coin: Coin, quantity: number) {
+    public addCoin(coin: Coin, quantity: number) {
         this.#briefcase.push(new CoinInBriefcase(coin, quantity, Date.now()));
         localStorage.setItem('briefcase', JSON.stringify(this.#briefcase));
 
@@ -60,7 +60,7 @@ export class CoinsInBriefcaseService {
         this.updateDifference();
     }
 
-    removeCoin(coinInBriefcase: CoinInBriefcase) {
+    public removeCoin(coinInBriefcase: CoinInBriefcase) {
         const indexCoin = this.#briefcase.findIndex(
             (currentCoin: CoinInBriefcase) =>
                 currentCoin.timeAddition === coinInBriefcase.timeAddition,
@@ -74,7 +74,7 @@ export class CoinsInBriefcaseService {
         }
     }
 
-    getCurrentCoinPrice(id: string): string {
+    public getCurrentCoinPrice(id: string): string {
         const coin = this.currentCoins.find((currentCoin: Coin) => currentCoin.id === id);
         if (!coin) return '';
         return coin.priceUsd;

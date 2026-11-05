@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ModalWindowsComponent } from './modal-windows.component';
 
@@ -8,7 +8,7 @@ describe('ModalWindowsComponent', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            declarations: [ModalWindowsComponent],
+            imports: [ModalWindowsComponent],
         });
         fixture = TestBed.createComponent(ModalWindowsComponent);
         component = fixture.componentInstance;

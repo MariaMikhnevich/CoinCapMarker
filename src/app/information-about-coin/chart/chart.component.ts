@@ -1,23 +1,22 @@
-import { HttpErrorResponse } from '@angular/common/http';
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, inject } from '@angular/core';
-import { Subscription } from 'rxjs';
+import type { HttpErrorResponse } from '@angular/common/http';
+import { Component, EventEmitter, Input, type OnChanges, type OnInit, Output, inject } from '@angular/core';
+import { take } from 'rxjs';
 import { ChartService } from 'src/app/entities/services/chart.service';
 import { VisualChartsService } from 'src/app/entities/services/visual-charts.service';
+import { HighchartsChartDirective, HighchartsChartComponent } from 'highcharts-angular';
+import { LoadingIndicatorComponent } from '../../loading-indicator/loading-indicator.component';
 
 @Component({
     selector: 'chart',
     templateUrl: './chart.component.html',
-    styleUrls: ['./chart.component.scss'],
-    standalone: false,
+    styleUrl: './chart.component.scss',
+    imports: [LoadingIndicatorComponent, HighchartsChartDirective, HighchartsChartComponent],
 })
 export class ChartComponent implements OnInit, OnChanges {
-    private chartService = inject(ChartService);
-
-    private visualChartsService = inject(VisualChartsService);
+    private readonly chartService = inject(ChartService);
+    private readonly visualChartsService = inject(VisualChartsService);
 
     chartOptions: any;
-
-    private subscription!: Subscription;
 
     public chartPoints!: number[][];
 
@@ -27,25 +26,27 @@ export class ChartComponent implements OnInit, OnChanges {
 
     @Output() loadError = new EventEmitter<HttpErrorResponse>();
 
-    ngOnInit(): void {
+    public ngOnInit(): void {
         this.getChartPoints('m5', 1, ['hour', [3]]);
     }
 
-    public getChartPoints(interval: string, days: number, unit: [string, number[]]) {
-        this.subscription = this.chartService.getChart(this.id, interval, days).subscribe({
-            next: (data: number[][]) => {
-                this.chartPoints = data;
-                this.chartOptions = this.visualChartsService.getChartOptions(
-                    this.name,
-                    this.chartPoints,
-                    unit,
-                );
-                this.subscription.unsubscribe();
-            },
-            error: (error: HttpErrorResponse) => {
-                this.loadError.emit(error);
-            },
-        });
+    private getChartPoints(interval: string, days: number, unit: [string, number[]]) {
+        this.chartService
+            .getChart(this.id, interval, days)
+            .pipe(take(1))
+            .subscribe({
+                next: (data: number[][]) => {
+                    this.chartPoints = data;
+                    this.chartOptions = this.visualChartsService.getChartOptions(
+                        this.name,
+                        this.chartPoints,
+                        unit,
+                    );
+                },
+                error: (error: HttpErrorResponse) => {
+                    this.loadError.emit(error);
+                },
+            });
     }
 
     changeBar(event: Event) {

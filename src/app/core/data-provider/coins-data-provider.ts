@@ -1,5 +1,5 @@
-import { Observable } from 'rxjs';
-import { Coin } from '../../entities/classes/coin.class';
+import type { Observable } from 'rxjs';
+import type { Coin } from '../../entities/classes/coin.class';
 
 /** A single point on a price chart: [timestamp(ms), priceUsd]. */
 export type ChartPoint = [number, number];

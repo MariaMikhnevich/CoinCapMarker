@@ -2,10 +2,10 @@
     <loading-indicator></loading-indicator>
     <div class="error">
         <div class="status">
-            {{ error.status }}
+            {{ error().status }}
         </div>
         <div class="error-message-and-go-back">
-            <div class="error-message">{{ error.error.error }}</div>
+            <div class="error-message">{{ error().error.error }}</div>
             <a href=""><button class="go-back">Back to main page</button></a>
         </div>
     </div>

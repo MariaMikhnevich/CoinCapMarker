@@ -1,9 +1,9 @@
 import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { of } from 'rxjs';
 import { COINS_DATA_PROVIDER } from '../core/data-provider/data-provider.token';
-import { Coin } from '../entities/classes/coin.class';
+import type { Coin } from '../entities/classes/coin.class';
 import { CoinInfoService } from '../entities/services/coin-info.service';
 import { InformationAboutCoinComponent } from './information-about-coin.component';
 
@@ -13,8 +13,7 @@ describe('InformationAboutCoinComponent', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            declarations: [InformationAboutCoinComponent],
-            imports: [RouterTestingModule],
+            imports: [RouterTestingModule, InformationAboutCoinComponent],
             providers: [
                 {
                     provide: COINS_DATA_PROVIDER,

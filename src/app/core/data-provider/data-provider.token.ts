@@ -1,5 +1,5 @@
 import { InjectionToken } from '@angular/core';
-import { CoinsDataProvider } from './coins-data-provider';
+import type { CoinsDataProvider } from './coins-data-provider';
 
 /**
  * Binds the app-wide data source to a concrete implementation.

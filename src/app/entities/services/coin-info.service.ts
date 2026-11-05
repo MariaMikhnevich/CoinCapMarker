@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
-import { Observable } from 'rxjs';
-import { Coin } from '../classes/coin.class';
+import type { Observable } from 'rxjs';
+import type { Coin } from '../classes/coin.class';
 import { COINS_DATA_PROVIDER } from '../../core/data-provider/data-provider.token';
 
 @Injectable()

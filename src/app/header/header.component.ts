@@ -1,23 +1,23 @@
-import { Component, OnDestroy, OnInit, inject } from '@angular/core';
+import { Component, type OnDestroy, type OnInit, inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { BehaviorSubject, Observable, Subscription } from 'rxjs';
-import { CoinInBriefcase } from '../entities/classes/coin-in-briefcase.class';
-import { Coin } from '../entities/classes/coin.class';
+import type { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { NgClass, AsyncPipe, DecimalPipe, PercentPipe, CurrencyPipe } from '@angular/common';
+import type { CoinInBriefcase } from '../entities/classes/coin-in-briefcase.class';
+import type { Coin } from '../entities/classes/coin.class';
 import { CoinsInBriefcaseService } from '../entities/services/coins-in-briefcase.service';
 import { CoinsService } from '../entities/services/coins.service';
+import { ModalWindowsComponent } from '../modal-windows/modal-windows.component';
 
 @Component({
     selector: 'app-header',
     templateUrl: './header.component.html',
-    styleUrls: ['./header.component.scss'],
-    standalone: false,
+    styleUrl: './header.component.scss',
+    imports: [ModalWindowsComponent, NgClass, AsyncPipe, DecimalPipe, PercentPipe, CurrencyPipe],
 })
 export class HeaderComponent implements OnInit, OnDestroy {
-    private coinsService = inject(CoinsService);
-
-    private router = inject(Router);
-
-    private coinsInBriefcaseService = inject(CoinsInBriefcaseService);
+    private readonly coinsService = inject(CoinsService);
+    private readonly router = inject(Router);
+    private readonly coinsInBriefcaseService = inject(CoinsInBriefcaseService);
 
     public topCoins!: Coin[];
 
@@ -40,7 +40,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
             this.coinsInBriefcaseService.percentageDifferenceInValueOfCoins;
     }
 
-    ngOnInit(): void {
+    public ngOnInit(): void {
         this.subscription = this.coinsService.getTopCoins(3).subscribe({
             next: (data: Coin[]) => {
                 this.topCoins = data;

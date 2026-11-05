@@ -1,16 +1,16 @@
-<div class="model-briefcase" [ngClass]="{ 'visible-briefcase': isVisible }" (click)="close()">
+<div class="model-briefcase" [class.visible-briefcase]="isVisible()" (click)="close()">
     <div class="modal-dialog" (click)="interception($event)">
         <div class="modal-content">
             <div class="modal-header">
                 <h3 class="modal-title">{{ title }}</h3>
                 <div title="Close" class="close" (click)="close()">×</div>
             </div>
-            @if (coin) {
+            @if (coin(); as coin) {
                 <div class="modal-body">
                     <modal-add-coin-in-briefcase [coin]="coin" (closed)="close()"></modal-add-coin-in-briefcase>
                 </div>
             }
-            @if (briefcase) {
+            @if (briefcase(); as briefcase) {
                 <div class="modal-body">
                     <modal-briefcase [briefcase]="briefcase"></modal-briefcase>
                 </div>

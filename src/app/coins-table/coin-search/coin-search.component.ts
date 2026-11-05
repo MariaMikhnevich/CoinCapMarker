@@ -1,26 +1,23 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { Coin } from 'src/app/entities/classes/coin.class';
+import { Component, input, output } from '@angular/core';
+import type { Coin } from 'src/app/entities/classes/coin.class';
 
 @Component({
-  selector: 'coin-search',
-  templateUrl: './coin-search.component.html',
-  styleUrls: ['./coin-search.component.scss'],
-  standalone: false,
+    selector: 'coin-search',
+    templateUrl: './coin-search.component.html',
+    styleUrl: './coin-search.component.scss',
 })
 export class CoinSearchComponent {
-  @Input() allCoins!: Coin[];
+    public readonly allCoins = input<Coin[]>([]);
 
-  public desiredCoin: string = '';
+    public readonly desiredCoinChanged = output<{ coins: Coin[]; value: string }>();
 
-  @Output() desiredCoinChanged = new EventEmitter<{ coins: Coin[]; value: string }>();
-
-  public searchCoin(event: Event) {
-    this.desiredCoin = (event.target as HTMLInputElement).value;
-    this.desiredCoinChanged.emit({
-      coins: this.allCoins.filter((coin) =>
-        coin.name.toLowerCase().includes(this.desiredCoin.toLowerCase()),
-      ),
-      value: this.desiredCoin,
-    });
-  }
+    protected searchCoin(event: Event) {
+        const desiredCoin = (event.target as HTMLInputElement).value;
+        this.desiredCoinChanged.emit({
+            coins: this.allCoins().filter((coin) =>
+                coin.name.toLowerCase().includes(desiredCoin.toLowerCase()),
+            ),
+            value: desiredCoin,
+        });
+    }
 }
