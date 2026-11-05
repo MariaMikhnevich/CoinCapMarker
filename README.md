@@ -9,19 +9,23 @@ in the browser's localStorage.
 
 ## Local setup
 
-The app reads its API key from `src/environments/`, and those files are
-git-ignored so the key never enters version control.
+The app configuration shape lives in `src/environments/environment.ts`
+(committed, no secrets). Secret values are injected at build time from a
+git-ignored `.env` file by `scripts/generate-env.mjs`, which npm runs
+automatically before `start`/`build`/`watch`/`test` and after `install`.
 
-1. Get a free CoinCap API key: [coincap.io/api-key](https://coincap.io/api-key)
-   (free tier: 500 requests/month, 5 requests/minute — no card required).
-2. Copy `src/environments/environment.example.ts` to `environment.ts` and
-   `environment.development.ts` in the same folder and paste your key into
-   `apiKey` in both.
-3. Run `npm install`, then `ng serve` and open `http://localhost:4200/`.
+1. Get free API keys (no card required):
+   - CoinCap (primary source): [coincap.io/api-key](https://coincap.io/api-key)
+   - CoinGecko (automatic fallback): [coingecko.com developer dashboard](https://www.coingecko.com/en/developers/dashboard)
+2. Copy `.env.example` to `.env` and paste your keys there.
+3. Run `npm install`, then `npm start` and open `http://localhost:4200/`.
 
-Note: the free key ships inside the client bundle (as any client-side key
-must). It is kept out of the repository to prevent leaks via git history;
-CI injects it at build time from GitHub Actions secrets.
+CI does not use `.env` — secrets are passed as environment variables to the
+build step (`COINCAP_API_KEY`, `COINGECKO_API_KEY` in Settings → Secrets →
+Actions), and the same script turns them into the generated file.
+
+Note: the keys ship inside the client bundle (as any client-side key must).
+They are kept out of the repository to prevent leaks via git history.
 
 ## Development server
 

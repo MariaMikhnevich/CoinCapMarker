@@ -30,17 +30,14 @@ jobs:
                   node-version-file: .nvmrc
                   cache: npm
 
-            # The real environment files are git-ignored; rebuild the
-            # production one from repository secrets at build time.
-            - name: Generate environment.ts
+            - run: npm ci
+            # Secrets arrive as environment variables: npm's prebuild hook
+            # (scripts/generate-env.mjs) turns them into env.generated.ts,
+            # which src/environments/environment.ts imports.
+            - run: npm run build
               env:
                   COINCAP_API_KEY: ${{ secrets.COINCAP_API_KEY }}
                   COINGECKO_API_KEY: ${{ secrets.COINGECKO_API_KEY }}
-              run: |
-                  printf "export const environment = {\n  production: true,\n  coincap: { apiUrl: 'https://rest.coincap.io/v3', apiKey: '%s' },\n  coingecko: { apiUrl: 'https://api.coingecko.com/api/v3', apiKey: '%s' },\n};\n" "$COINCAP_API_KEY" "$COINGECKO_API_KEY" > src/environments/environment.ts
-
-            - run: npm ci
-            - run: npm run build
 
             - uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b # v5
             - uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa # v3
