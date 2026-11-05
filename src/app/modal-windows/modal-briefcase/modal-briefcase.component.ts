@@ -1,30 +1,31 @@
-import { Component, Input, OnInit, inject } from '@angular/core';
-import { CoinInBriefcase } from 'src/app/entities/classes/coin-in-briefcase.class';
+import { Component, type OnInit, inject, input } from '@angular/core';
+import type { CoinInBriefcase } from 'src/app/entities/classes/coin-in-briefcase.class';
 import { CoinsInBriefcaseService } from 'src/app/entities/services/coins-in-briefcase.service';
+import { CurrencyPipe, DatePipe } from '@angular/common';
 
 @Component({
     selector: 'modal-briefcase',
     templateUrl: './modal-briefcase.component.html',
-    styleUrls: ['./modal-briefcase.component.scss'],
-    standalone: false,
+    styleUrl: './modal-briefcase.component.scss',
+    imports: [CurrencyPipe, DatePipe],
 })
 export class ModalBriefcaseComponent implements OnInit {
-    private coinsInBriefcaseService = inject(CoinsInBriefcaseService);
+    public readonly briefcase = input.required<CoinInBriefcase[]>();
 
-    @Input() briefcase: CoinInBriefcase[] | null = null;
+    private readonly coinsInBriefcaseService = inject(CoinsInBriefcaseService);
 
-    ngOnInit(): void {
-        this.briefcase?.forEach((coinInBriefcase: CoinInBriefcase) => {
+    public ngOnInit(): void {
+        this.briefcase().forEach((coinInBriefcase: CoinInBriefcase) => {
             coinInBriefcase.isHidden = true;
         });
     }
 
-    public deleteCoinFromBriefcase(coinInBriefcase: CoinInBriefcase) {
+    protected deleteCoinFromBriefcase(coinInBriefcase: CoinInBriefcase) {
         this.coinsInBriefcaseService.removeCoin(coinInBriefcase);
-        this.briefcase = this.coinsInBriefcaseService.getBriefcase;
+        // this.briefcase = this.coinsInBriefcaseService.getBriefcase; - ?? need check, mb move to service
     }
 
-    getCurrentPrice(id: string): string {
+    protected getCurrentPrice(id: string): string {
         return this.coinsInBriefcaseService.getCurrentCoinPrice(id);
     }
 }

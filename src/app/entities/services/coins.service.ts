@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
-import { map, Observable, shareReplay } from 'rxjs';
-import { Coin } from '../classes/coin.class';
+import { map, type Observable, shareReplay } from 'rxjs';
+import type { Coin } from '../classes/coin.class';
 import { COINS_DATA_PROVIDER } from '../../core/data-provider/data-provider.token';
 
 const ASSETS_PAGE_SIZE = 2000;
@@ -19,7 +19,7 @@ export class CoinsService {
      * TTL window receive the same response (each its own copy of the array),
      * which keeps the app well inside the API rate limits.
      */
-    getAssets(): Observable<Coin[]> {
+    public getAssets(): Observable<Coin[]> {
         if (!this.assets$ || Date.now() - this.assetsFetchedAt > CACHE_TTL_MS) {
             this.assetsFetchedAt = Date.now();
             this.assets$ = this.provider
@@ -29,11 +29,11 @@ export class CoinsService {
         return this.assets$.pipe(map((coins) => [...coins]));
     }
 
-    getTopCoins(count: number): Observable<Coin[]> {
+    public getTopCoins(count: number): Observable<Coin[]> {
         return this.getAssets().pipe(map((coins) => coins.slice(0, count)));
     }
 
-    getCoinsWithoutEmptyLines(coin: Coin): boolean {
+    public getCoinsWithoutEmptyLines(coin: Coin): boolean {
         if (!coin.priceUsd || !+(+coin.priceUsd).toFixed(2)) return false;
         if (!coin.marketCapUsd || !+(+coin.marketCapUsd).toFixed(2)) return false;
         if (!coin.changePercent24Hr || !+(+coin.changePercent24Hr).toFixed(2)) return false;

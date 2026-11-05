@@ -1,4 +1,4 @@
-import { Coin } from './coin.class';
+import type { Coin } from './coin.class';
 
 export class CoinInBriefcase {
     constructor(

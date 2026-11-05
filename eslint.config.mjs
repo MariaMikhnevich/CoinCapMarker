@@ -25,11 +25,15 @@ export default tseslint.config(
     },
     {
         files: ['src/**/*.ts'],
+        languageOptions: {
+            parserOptions: {
+                projectService: true,
+                tsconfigRootDir: import.meta.dirname,
+            },
+        },
         rules: {
             // Angular style guide mandates named exports for components, modules, services, etc.
             'import-x/prefer-default-export': 'off',
-            // The app is NgModule-based; a standalone migration is future work, not a lint error.
-            '@angular-eslint/prefer-standalone': 'off',
             // Explicit types on component fields double as documentation for template bindings.
             '@typescript-eslint/no-inferrable-types': 'off',
             // Template-bound handlers and pure pipe transforms may legitimately not use `this`.
@@ -38,6 +42,21 @@ export default tseslint.config(
             'no-param-reassign': ['error', { props: false }],
             // Boot/error logging is a legitimate use of the console.
             'no-console': ['warn', { allow: ['warn', 'error'] }],
+            '@typescript-eslint/consistent-type-imports': [
+                'error',
+                {
+                    prefer: 'type-imports',
+                    fixStyle: 'inline-type-imports',
+                },
+            ],
+            '@typescript-eslint/consistent-type-exports': [
+                'error',
+                {
+                    fixMixedExportsWithInlineTypeSpecifier: true,
+                },
+            ],
+            '@typescript-eslint/no-import-type-side-effects': 'error',
+            '@stylistic/lines-between-class-members': 'off',
         },
     },
     eslintConfigPrettier,

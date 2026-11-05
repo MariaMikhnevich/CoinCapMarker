@@ -1,15 +1,16 @@
 import {
     HttpContextToken,
-    HttpEvent,
-    HttpHandler,
-    HttpRequest,
-    HttpInterceptor,
+    type HttpEvent,
+    type HttpHandler,
+    type HttpRequest,
+    type HttpInterceptor,
 } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { finalize, Observable } from 'rxjs';
+import { finalize, type Observable } from 'rxjs';
 import { LoadingService } from '../services/loading.service';
 
 export const SkipLoading = new HttpContextToken<boolean>(() => false);
+
 @Injectable()
 export class LoadingInterceptor implements HttpInterceptor {
     private loadingService = inject(LoadingService);

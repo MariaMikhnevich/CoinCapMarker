@@ -1,79 +1,74 @@
-import { Component, HostListener, OnDestroy, OnInit, DOCUMENT, inject } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Component, type OnInit, DOCUMENT, inject, DestroyRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
-import { HttpErrorResponse } from '@angular/common/http';
+import { DecimalPipe, CurrencyPipe } from '@angular/common';
+import type { HttpErrorResponse } from '@angular/common/http';
+
+import { debounceTime, fromEvent } from 'rxjs';
+
+import { NgxPaginationModule } from 'ngx-pagination';
 import { CoinsService } from '../entities/services/coins.service';
-import { Coin } from '../entities/classes/coin.class';
+import type { Coin } from '../entities/classes/coin.class';
+import { ErrorComponent } from '../error/error.component';
+import { ModalWindowsComponent } from '../modal-windows/modal-windows.component';
+import { LoadingIndicatorComponent } from '../loading-indicator/loading-indicator.component';
+import { CoinSearchComponent } from './coin-search/coin-search.component';
+import { WINDOW } from '../core/tokens/window.token';
 
 @Component({
     selector: 'coins-table',
     templateUrl: './coins-table.component.html',
-    styleUrls: ['./coins-table.component.scss'],
-    standalone: false,
+    styleUrl: './coins-table.component.scss',
+    imports: [
+        ErrorComponent,
+        ModalWindowsComponent,
+        LoadingIndicatorComponent,
+        CoinSearchComponent,
+        NgxPaginationModule,
+        DecimalPipe,
+        CurrencyPipe,
+    ],
 })
-export class CoinsTableComponent implements OnInit, OnDestroy {
-    private coinsService = inject(CoinsService);
-
-    private router = inject(Router);
-
-    private document = inject<Document>(DOCUMENT);
-
-    allCoins: Coin[] = [];
-
-    displayedCoins: Coin[] = [];
+export class CoinsTableComponent implements OnInit {
+    private readonly coinsService = inject(CoinsService);
+    private readonly router = inject(Router);
+    private readonly document = inject<Document>(DOCUMENT);
+    private readonly window = inject(WINDOW);
+    private readonly destroyRef = inject(DestroyRef);
 
     private sortCount = [0, 0, 0, 0];
 
-    page: number = 1;
+    protected readonly tableSizes = [100, 200] as const;
 
-    count: number = 0;
+    protected allCoins: Coin[] = [];
+    protected displayedCoins: Coin[] = [];
+    protected page: number = 1;
+    protected count: number = 0;
+    protected tableSize: number = 100;
 
-    tableSize: number = 100;
+    protected isVisibleModalAddCoin: boolean = false;
+    protected coinTransferredByModal: Coin | null = null;
+    protected error: HttpErrorResponse | null = null;
 
-    tableSizes: any = [100, 200];
+    protected windowScrolled: boolean = false;
 
-    isVisibleModalAddCoin: boolean = false;
+    protected searchMode: boolean = false;
 
-    coinTransferredByModal: Coin | null = null;
-
-    error!: HttpErrorResponse;
-
-    private subscription!: Subscription;
-
-    windowScrolled!: boolean;
-
-    searchMode: boolean = false;
-
-    ngOnInit() {
+    public ngOnInit() {
         this.loadCoins();
+        this.onWindowScroll();
     }
 
-    // one shared request; pagination, search and sorting then work client-side
-    loadCoins() {
-        this.subscription = this.coinsService.getAssets().subscribe({
-            next: (data: Coin[]) => {
-                this.allCoins = data.filter((coin) =>
-                    this.coinsService.getCoinsWithoutEmptyLines(coin),
-                );
-                this.count = this.allCoins.length;
-                this.displayedCoins = this.allCoins;
-            },
-            error: (error: HttpErrorResponse) => {
-                this.error = error;
-            },
-        });
-    }
-
-    onTableDataChange(e: number) {
+    protected onTableDataChange(e: number) {
         this.page = e;
     }
 
-    changeTableSize(event: Event) {
+    protected changeTableSize(event: Event) {
         this.tableSize = +(event.target as HTMLSelectElement).value;
         this.page = 1;
     }
 
-    public sort(index: number) {
+    protected sort(index: number) {
         let key: string;
         switch (index) {
             case 1:
@@ -97,11 +92,11 @@ export class CoinsTableComponent implements OnInit, OnDestroy {
         }
     }
 
-    moreDetailed(id: string) {
+    protected moreDetailed(id: string) {
         this.router.navigate([`/coins/${id}`]);
     }
 
-    coinsChange(event: { coins: Coin[]; value: string }) {
+    protected coinsChange(event: { coins: Coin[]; value: string }) {
         if (event.value !== '') {
             this.displayedCoins = event.coins;
             this.searchMode = true;
@@ -112,42 +107,62 @@ export class CoinsTableComponent implements OnInit, OnDestroy {
         }
     }
 
-    addCoin(event: Event, coin: Coin) {
+    protected addCoin(event: Event, coin: Coin) {
         event.stopPropagation();
         this.isVisibleModalAddCoin = true;
         this.coinTransferredByModal = coin;
     }
 
-    closeModal() {
+    protected closeModal() {
         this.isVisibleModalAddCoin = false;
         this.coinTransferredByModal = null;
     }
 
-    public ngOnDestroy() {
-        this.subscription.unsubscribe();
-    }
-
-    @HostListener('window:scroll', [])
-    onWindowScroll() {
-        if (
-            window.pageYOffset ||
-            document.documentElement.scrollTop ||
-            document.body.scrollTop > 100
-        ) {
-            this.windowScrolled = true;
-        } else if (
-            (this.windowScrolled && window.pageYOffset) ||
-            document.documentElement.scrollTop ||
-            document.body.scrollTop < 10
-        ) {
-            this.windowScrolled = false;
-        }
-    }
-
-    scrollToTop() {
-        const currentScroll = document.documentElement.scrollTop || document.body.scrollTop;
+    protected scrollToTop() {
+        const currentScroll =
+            this.document.documentElement.scrollTop || this.document.body.scrollTop;
         if (currentScroll > 0) {
             window.scrollTo(0, 0);
         }
+    }
+
+    // one shared request; pagination, search and sorting then work client-side
+    private loadCoins() {
+        this.coinsService
+            .getAssets()
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe({
+                next: (data: Coin[]) => {
+                    this.allCoins = data.filter((coin) =>
+                        this.coinsService.getCoinsWithoutEmptyLines(coin),
+                    );
+                    this.count = this.allCoins.length;
+                    this.displayedCoins = this.allCoins;
+                },
+                error: (error: HttpErrorResponse) => {
+                    this.error = error;
+                },
+            });
+    }
+
+    private onWindowScroll() {
+        fromEvent(this.window, 'scroll')
+            .pipe(debounceTime(300), takeUntilDestroyed(this.destroyRef))
+            .subscribe((event) => {
+                console.log(event);
+                if (
+                    this.window.pageYOffset ||
+                    this.document.documentElement.scrollTop ||
+                    this.document.body.scrollTop > 100
+                ) {
+                    this.windowScrolled = true;
+                } else if (
+                    (this.windowScrolled && window.pageYOffset) ||
+                    this.document.documentElement.scrollTop ||
+                    this.document.body.scrollTop < 10
+                ) {
+                    this.windowScrolled = false;
+                }
+            });
     }
 }

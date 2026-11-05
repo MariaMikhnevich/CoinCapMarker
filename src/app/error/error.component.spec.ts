@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { LoadingIndicatorComponent } from '../loading-indicator/loading-indicator.component';
 import { ErrorComponent } from './error.component';
@@ -9,8 +9,7 @@ describe('ErrorComponent', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            declarations: [ErrorComponent],
-            imports: [LoadingIndicatorComponent],
+            imports: [LoadingIndicatorComponent, ErrorComponent],
         });
         fixture = TestBed.createComponent(ErrorComponent);
         component = fixture.componentInstance;

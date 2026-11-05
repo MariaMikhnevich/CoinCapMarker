@@ -1,0 +1,11 @@
+- name: Generate environment.prod.ts
+  env:
+      COINCAP_API_KEY: ${{ secrets.COINCAP_API_KEY }}
+  run: |
+      echo "export const environment = { production: true, \
+        apiUrl: 'https://rest.coincap.io/v3', apiKey: '$COINCAP_API_KEY' };" \
+        > src/environments/environment.prod.ts
+
+- run: npm ci
+- run: npm run build -- --configuration production
+- uses: angular-cli-ghpages@v1 # или actions/deploy-pages

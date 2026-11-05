@@ -1,5 +1,5 @@
 <div class="container">
-    @for (coinInBriefcase of briefcase; track coinInBriefcase) {
+    @for (coinInBriefcase of briefcase(); track coinInBriefcase.coin.id) {
         <div class="coin-in-briefcase" (click)="coinInBriefcase.isHidden = !coinInBriefcase.isHidden">
             <div class="info">
                 <div class="basic-information">
@@ -17,7 +17,7 @@
                     <span title="The time when the purchase of coins was made">{{
                         coinInBriefcase.timeAddition | date: 'M/d/yy, h:mm a'
                     }}</span>
-                    <img [ngClass]="{ unwrap: !coinInBriefcase.isHidden }" src="assets/img/unwrap.png" alt="" />
+                    <img [class.unwrap]="!coinInBriefcase.isHidden" src="assets/img/unwrap.png" alt="" />
                 </div>
             </div>
             <div class="more-info-and-delete" [hidden]="coinInBriefcase.isHidden">
@@ -35,7 +35,7 @@
                             getCurrentPrice(coinInBriefcase.coin.id) | currency: 'CAD' : 'symbol-narrow' : '.2-2'
                         }}"
                     >
-                        Сurrent total cost:
+                        Current total cost:
                         {{
                             +getCurrentPrice(coinInBriefcase.coin.id) * coinInBriefcase.quantity
                                 | currency: 'CAD' : 'symbol-narrow' : '.2-2'

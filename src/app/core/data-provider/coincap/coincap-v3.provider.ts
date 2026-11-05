@@ -1,10 +1,10 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { map, Observable } from 'rxjs';
+import { map, type Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { Coin } from '../../../entities/classes/coin.class';
-import { ChartPoint, CoinsDataProvider } from '../coins-data-provider';
-import {
+import type { ChartPoint, CoinsDataProvider } from '../coins-data-provider';
+import type {
     CoinCapAssetDto,
     CoinCapAssetsResponse,
     CoinCapAssetResponse,
@@ -20,7 +20,7 @@ export class CoinCapV3Provider implements CoinsDataProvider {
 
     private readonly apiUrl = environment.coincap.apiUrl;
 
-    getAssets(limit?: number, offset?: number): Observable<Coin[]> {
+    public getAssets(limit?: number, offset?: number): Observable<Coin[]> {
         let params = this.authParams();
         if (limit != null) params = params.set('limit', limit);
         if (offset != null) params = params.set('offset', offset);
@@ -30,13 +30,13 @@ export class CoinCapV3Provider implements CoinsDataProvider {
             .pipe(map(({ data }) => data.map((asset) => this.toCoin(asset))));
     }
 
-    getAsset(id: string): Observable<Coin> {
+    public getAsset(id: string): Observable<Coin> {
         return this.http
             .get<CoinCapAssetResponse>(`${this.apiUrl}/assets/${id}`, { params: this.authParams() })
             .pipe(map(({ data }) => this.toCoin(data)));
     }
 
-    getHistory(id: string, interval: string, days: number): Observable<ChartPoint[]> {
+    public getHistory(id: string, interval: string, days: number): Observable<ChartPoint[]> {
         const end = Date.now();
         const start = end - 1000 * 60 * 60 * 24 * days;
         const params = this.authParams()

@@ -1,5 +1,5 @@
 import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { of } from 'rxjs';
 import { COINS_DATA_PROVIDER } from '../../core/data-provider/data-provider.token';
 import { ChartService } from '../../entities/services/chart.service';
@@ -13,8 +13,7 @@ describe('ChartComponent', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            declarations: [ChartComponent],
-            imports: [LoadingIndicatorComponent],
+            imports: [LoadingIndicatorComponent, ChartComponent],
             providers: [
                 {
                     provide: COINS_DATA_PROVIDER,

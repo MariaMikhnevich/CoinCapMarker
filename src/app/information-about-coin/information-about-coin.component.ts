@@ -1,15 +1,26 @@
-import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnDestroy, inject, OnInit } from '@angular/core';
+import type { HttpErrorResponse } from '@angular/common/http';
+import { Component, type OnDestroy, inject, type OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Subscription, switchMap } from 'rxjs';
-import { Coin } from '../entities/classes/coin.class';
+import { type Subscription, switchMap } from 'rxjs';
+import { NgClass, DecimalPipe, CurrencyPipe } from '@angular/common';
+import type { Coin } from '../entities/classes/coin.class';
 import { CoinInfoService } from '../entities/services/coin-info.service';
+import { ErrorComponent } from '../error/error.component';
+import { ModalWindowsComponent } from '../modal-windows/modal-windows.component';
+import { ChartComponent } from './chart/chart.component';
 
 @Component({
     selector: 'app-information-about-coin',
     templateUrl: './information-about-coin.component.html',
-    styleUrls: ['./information-about-coin.component.scss'],
-    standalone: false,
+    styleUrl: './information-about-coin.component.scss',
+    imports: [
+        ErrorComponent,
+        ModalWindowsComponent,
+        NgClass,
+        ChartComponent,
+        DecimalPipe,
+        CurrencyPipe,
+    ],
 })
 export class InformationAboutCoinComponent implements OnDestroy, OnInit {
     private route = inject(ActivatedRoute);
