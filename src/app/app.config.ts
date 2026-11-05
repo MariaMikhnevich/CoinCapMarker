@@ -7,6 +7,8 @@ import { provideRouter, withComponentInputBinding, withInMemoryScrolling } from 
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { COINS_DATA_PROVIDER } from './core/data-provider/data-provider.token';
 import { CoinCapV3Provider } from './core/data-provider/coincap/coincap-v3.provider';
+import { CoinGeckoProvider } from './core/data-provider/coingecko/coingecko.provider';
+import { FallbackCoinsDataProvider } from './core/data-provider/fallback/fallback.provider';
 import { CoinsService } from './entities/services/coins.service';
 import { CoinInfoService } from './entities/services/coin-info.service';
 import { ChartService } from './entities/services/chart.service';
@@ -26,7 +28,9 @@ export const appConfig: ApplicationConfig = {
             }),
         ),
         importProvidersFrom(NgxPaginationModule, BrowserModule, MatProgressSpinnerModule),
-        { provide: COINS_DATA_PROVIDER, useClass: CoinCapV3Provider },
+        CoinCapV3Provider,
+        CoinGeckoProvider,
+        { provide: COINS_DATA_PROVIDER, useClass: FallbackCoinsDataProvider },
         CoinsService,
         CoinInfoService,
         ChartService,

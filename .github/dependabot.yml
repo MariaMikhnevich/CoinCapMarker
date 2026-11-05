@@ -1,0 +1,9 @@
+version: 2
+updates:
+    # Keeps the commit-SHA pins in .github/workflows/deploy.yml up to date:
+    # when an action publishes a new release, Dependabot opens a PR that
+    # moves the pin, so updates are always reviewed instead of automatic.
+    - package-ecosystem: github-actions
+      directory: /
+      schedule:
+          interval: weekly
