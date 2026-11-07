@@ -1,11 +1,11 @@
 <modal-windows
-    [isVisible]="isVisualBriefcase"
-    [isBriefcase]="isVisualBriefcase"
+    [isVisible]="isVisualBriefcase()"
+    [isBriefcase]="isVisualBriefcase()"
     (closed)="closeBriefcase()"
 ></modal-windows>
 <header>
     <div class="top3">
-        @for (coin of topCoins; track coin) {
+        @for (coin of topCoins(); track coin.id) {
             <div (click)="moreDetailed(coin)">
                 <img src="{{ coin.logo }}" alt="" />
                 <span>{{ coin.priceUsd | currency: 'CAD' : 'symbol-narrow' : '.2-2' }}</span>
@@ -13,19 +13,15 @@
         }
     </div>
     <div class="briefcase" (click)="openBriefcase()">
-        <div class="briefcase-value">{{ briefcaseValue | async | currency: 'CAD' : 'symbol-narrow' : '.2-2' }}</div>
-        @if (+differenceValue.getValue().toFixed(2)) {
-            <div
-                class="difference"
-                [ngClass]="{ negative: +differenceValue.getValue() < 0, positive: +differenceValue.getValue() > 0 }"
-            >
-                <!-- && (+(percentageDifferenceValue.getValue() * 100).toFixed(2) || ) -->
-                @if (differenceValue.getValue() > 0) {
+        <div class="briefcase-value">
+            {{ briefcaseValue() | currency: 'CAD' : 'symbol-narrow' : '.2-2' }}
+        </div>
+        @if (+differenceValue().toFixed(2)) {
+            <div class="difference" [class.negative]="differenceValue() < 0" [class.positive]="differenceValue() > 0">
+                @if (differenceValue() > 0) {
                     <span>+</span>
                 }
-                {{ differenceValue | async | number: '.2-2' }} ({{
-                    percentageDifferenceValue | async | percent: '.2-2'
-                }})
+                {{ differenceValue() | number: '.2-2' }} ({{ percentageDifferenceValue() | percent: '.2-2' }})
             </div>
         }
     </div>
