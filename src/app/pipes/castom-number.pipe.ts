@@ -8,6 +8,7 @@ export class CustomNumberPipe implements PipeTransform {
         if (value == null) return '';
         const srt = `${value}`;
         const parts = srt.split('.');
+        if (parts.length === 1) return srt;
         if (+parts[0] === 0) {
             let index = 0;
             for (let i = 0; i < parts[1].length; i += 1) {
