@@ -24,22 +24,16 @@ export class CoinsInBriefcaseService {
 
     #briefcaseValue = new BehaviorSubject<number>(0);
 
+    public readonly briefcaseValue$ = this.#briefcaseValue.asObservable();
+
+    public readonly differenceInValueOfCoins$ = this.#difference.asObservable();
+
+    public readonly percentageDifferenceInValueOfCoins$ = this.#percentageDifference.asObservable();
+
     constructor() {
         this.#briefcase.set(this.readBriefcaseFromStorage());
         this.#briefcaseValue.next(this.getBriefcaseValue());
         this.getCurrentCoins();
-    }
-
-    get briefcaseValue(): BehaviorSubject<number> {
-        return this.#briefcaseValue;
-    }
-
-    get differenceInValueOfCoins(): BehaviorSubject<number> {
-        return this.#difference;
-    }
-
-    get percentageDifferenceInValueOfCoins(): BehaviorSubject<number> {
-        return this.#percentageDifference;
     }
 
     public addCoin(coin: Coin, quantity: number) {
