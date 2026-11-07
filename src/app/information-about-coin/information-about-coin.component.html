@@ -1,19 +1,19 @@
-@if (error) {
+@if (error(); as error) {
     <div>
         <error [error]="error"></error>
     </div>
 } @else {
     <modal-windows
-        [isVisible]="isVisibleModalAddCoin"
-        [coin]="coinTransferredByModal"
+        [isVisible]="isVisibleModalAddCoin()"
+        [coin]="coinTransferredByModal()"
         (closed)="closeModal()"
     ></modal-windows>
     <main>
         <div class="info-and-button">
-            <button class="go-back">
-                <a href=""><img src="assets/img/turn-left.png" alt="" /></a>
-            </button>
-            @if (coin) {
+            <a routerLink="/" class="go-back">
+                <img src="assets/img/turn-left.png" alt="Back to main page" />
+            </a>
+            @if (coin(); as coin) {
                 <div class="info">
                     <div class="basic-information">
                         <div class="logo-and-name">
@@ -33,7 +33,7 @@
                             </div>
                             <div
                                 class="change-percent-24hr"
-                                [ngClass]="{
+                                [class]="{
                                     negative: +coin.changePercent24Hr < 0,
                                     positive: +coin.changePercent24Hr > 0,
                                 }"
@@ -60,8 +60,8 @@
                 </div>
             }
         </div>
-        @if (coin) {
-            <chart [id]="id" [name]="coin.name" (loadError)="errorOccurred($event)"></chart>
+        @if (coin(); as coin) {
+            <chart [coin]="coin" (loadError)="errorOccurred($event)"></chart>
         }
     </main>
 }
