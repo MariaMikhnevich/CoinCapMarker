@@ -148,8 +148,7 @@ export class CoinsTableComponent implements OnInit {
     private onWindowScroll() {
         fromEvent(this.window, 'scroll')
             .pipe(debounceTime(300), takeUntilDestroyed(this.destroyRef))
-            .subscribe((event) => {
-                console.log(event);
+            .subscribe(() => {
                 if (
                     this.window.pageYOffset ||
                     this.document.documentElement.scrollTop ||

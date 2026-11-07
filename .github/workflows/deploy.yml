@@ -31,6 +31,10 @@ jobs:
                   cache: npm
 
             - run: npm ci
+
+            # Unit tests run before every deploy; watch mode is off in CI.
+            - run: npm test -- --watch=false
+
             # Secrets arrive as environment variables: npm's prebuild hook
             # (scripts/generate-env.mjs) turns them into env.generated.ts,
             # which src/environments/environment.ts imports.
