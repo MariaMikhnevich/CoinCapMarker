@@ -25,15 +25,17 @@ export class CoinGeckoProvider implements CoinsDataProvider {
         const pageCount = Math.ceil(limit / MARKETS_PAGE_SIZE);
         const pages = Array.from({ length: pageCount }, (_, i) => firstPage + i);
 
-        return forkJoin(pages.map(page =>
-            this.http.get<CoinGeckoMarketDto[]>(`${this.apiUrl}/coins/markets`, {
-                params: this.authParams()
-                    .set('vs_currency', 'usd')
-                    .set('order', 'market_cap_desc')
-                    .set('per_page', MARKETS_PAGE_SIZE)
-                    .set('page', page),
-            }),
-        )).pipe(map(markets => markets.flat().map(market => this.marketToCoin(market))));
+        return forkJoin(
+            pages.map((page) =>
+                this.http.get<CoinGeckoMarketDto[]>(`${this.apiUrl}/coins/markets`, {
+                    params: this.authParams()
+                        .set('vs_currency', 'usd')
+                        .set('order', 'market_cap_desc')
+                        .set('per_page', MARKETS_PAGE_SIZE)
+                        .set('page', page),
+                }),
+            ),
+        ).pipe(map((markets) => markets.flat().map((market) => this.marketToCoin(market))));
     }
 
     getAsset(id: string): Observable<Coin> {
@@ -47,7 +49,7 @@ export class CoinGeckoProvider implements CoinsDataProvider {
                     .set('developer_data', 'false')
                     .set('sparkline', 'false'),
             })
-            .pipe(map(dto => this.detailToCoin(dto)));
+            .pipe(map((dto) => this.detailToCoin(dto)));
     }
 
     getHistory(id: string, interval: string, days: number): Observable<ChartPoint[]> {
@@ -55,9 +57,7 @@ export class CoinGeckoProvider implements CoinsDataProvider {
         // CoinCap-specific `interval` is not mapped.
         return this.http
             .get<CoinGeckoMarketChartResponse>(`${this.apiUrl}/coins/${id}/market_chart`, {
-                params: this.authParams()
-                    .set('vs_currency', 'usd')
-                    .set('days', days),
+                params: this.authParams().set('vs_currency', 'usd').set('days', days),
             })
             .pipe(map(({ prices }) => prices.map(([time, price]) => toChartPoint(time, price))));
     }
