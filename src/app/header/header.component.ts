@@ -20,27 +20,27 @@ export class HeaderComponent {
     private readonly router = inject(Router);
     private readonly coinsInBriefcaseService = inject(CoinsInBriefcaseService);
 
-    public readonly topCoins = toSignal(this.coinsService.getTopCoins(3), {
+    protected readonly topCoins = toSignal(this.coinsService.getTopCoins(3), {
         initialValue: [] as Coin[],
     });
 
-    public readonly briefcaseValue = toSignal(this.coinsInBriefcaseService.briefcaseValue$, {
+    protected readonly briefcaseValue = toSignal(this.coinsInBriefcaseService.briefcaseValue$, {
         initialValue: 0,
     });
 
-    public readonly differenceValue = toSignal(
+    protected readonly differenceValue = toSignal(
         this.coinsInBriefcaseService.differenceInValueOfCoins$,
         { initialValue: 0 },
     );
 
-    public readonly percentageDifferenceValue = toSignal(
+    protected readonly percentageDifferenceValue = toSignal(
         this.coinsInBriefcaseService.percentageDifferenceInValueOfCoins$,
         { initialValue: 0 },
     );
 
     protected readonly isVisualBriefcase = signal(false);
 
-    moreDetailed(coin: Coin) {
+    protected moreDetailed(coin: Coin) {
         this.selectedCoinService.select(coin);
         this.router.navigate([`/coins/${coin.id}`]);
     }
