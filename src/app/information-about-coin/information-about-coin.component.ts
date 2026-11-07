@@ -1,8 +1,8 @@
 import type { HttpErrorResponse } from '@angular/common/http';
-import { Component, type OnDestroy, inject, type OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { type Subscription, switchMap } from 'rxjs';
-import { NgClass, DecimalPipe, CurrencyPipe } from '@angular/common';
+import { Component, inject, type OnInit, signal } from '@angular/core';
+import { ActivatedRoute, RouterLink } from '@angular/router';
+import { map, take } from 'rxjs';
+import { DecimalPipe, CurrencyPipe } from '@angular/common';
 import type { Coin } from '../entities/classes/coin.class';
 import { CoinInfoService } from '../entities/services/coin-info.service';
 import { ErrorComponent } from '../error/error.component';
@@ -16,64 +16,60 @@ import { ChartComponent } from './chart/chart.component';
     imports: [
         ErrorComponent,
         ModalWindowsComponent,
-        NgClass,
         ChartComponent,
         DecimalPipe,
         CurrencyPipe,
+        RouterLink,
     ],
 })
-export class InformationAboutCoinComponent implements OnDestroy, OnInit {
+export class InformationAboutCoinComponent implements OnInit {
     private route = inject(ActivatedRoute);
-
     private coinInfoService = inject(CoinInfoService);
 
-    id!: string;
+    private readonly coinId = signal<string | null>(null);
 
-    public coin!: Coin;
+    protected readonly coin = signal<Coin | null>(null);
+    protected readonly error = signal<HttpErrorResponse | null>(null);
 
-    public error: HttpErrorResponse | null = null;
+    protected readonly isVisibleModalAddCoin = signal<boolean>(false);
+    protected readonly coinTransferredByModal = signal<Coin | null>(null);
 
-    private subscription!: Subscription;
-
-    isVisibleModalAddCoin: boolean = false;
-
-    coinTransferredByModal: Coin | null = null;
-
-    ngOnInit() {
-        this.route.paramMap.pipe(switchMap((params) => params.getAll('id'))).subscribe((data) => {
-            this.id = data;
-            this.error = null;
+    public ngOnInit() {
+        this.route.paramMap.pipe(map((params) => params.get('id'))).subscribe((data) => {
+            this.coinId.set(data);
+            this.error.set(null);
             this.getCionInfo();
         });
     }
 
-    public getCionInfo() {
-        this.subscription = this.coinInfoService.getCoinInfo(this.id).subscribe({
-            next: (data: Coin) => {
-                this.coin = data;
-            },
-            error: (error: HttpErrorResponse) => {
-                this.error = error;
-            },
-        });
+    protected errorOccurred(error: HttpErrorResponse) {
+        this.error.set(error);
     }
 
-    errorOccurred(error: HttpErrorResponse) {
-        this.error = error;
-    }
-
-    addCoin(event: Event, coin: Coin) {
+    protected addCoin(event: Event, coin: Coin) {
         event.stopPropagation();
-        this.isVisibleModalAddCoin = true;
-        this.coinTransferredByModal = coin;
+        this.isVisibleModalAddCoin.set(true);
+        this.coinTransferredByModal.set(coin);
     }
 
-    closeModal() {
-        this.isVisibleModalAddCoin = false;
-        this.coinTransferredByModal = null;
+    protected closeModal() {
+        this.isVisibleModalAddCoin.set(false);
+        this.coinTransferredByModal.set(null);
     }
 
-    ngOnDestroy(): void {
-        this.subscription?.unsubscribe();
+    private getCionInfo() {
+        const id = this.coinId();
+        if (id)
+            this.coinInfoService
+                .getCoinInfo(id)
+                .pipe(take(1))
+                .subscribe({
+                    next: (data: Coin) => {
+                        this.coin.set(data);
+                    },
+                    error: (error: HttpErrorResponse) => {
+                        this.error.set(error);
+                    },
+                });
     }
 }

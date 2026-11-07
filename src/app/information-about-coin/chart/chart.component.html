@@ -2,10 +2,15 @@
     <loading-indicator></loading-indicator>
     <div class="select">
         <select name="" id="" (change)="changeBar($event)">
-            <option value="d1">1 day</option>
-            <option value="d7">7 days</option>
-            <option value="m1">1 month</option>
+            @for (option of options; track option.value) {
+                <option value="{{ option.value }}">{{ option.label }}</option>
+            }
         </select>
     </div>
-    <highcharts-chart [options]="chartOptions" style="width: 100%; height: 400px; display: block"></highcharts-chart>
+    @if (chartOptions(); as chartOptions) {
+        <highcharts-chart
+            [options]="chartOptions"
+            style="width: 100%; height: 400px; display: block"
+        ></highcharts-chart>
+    }
 </div>
