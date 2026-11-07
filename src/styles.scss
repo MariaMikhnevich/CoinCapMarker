@@ -1,7 +1,9 @@
 // Custom Theming for Angular Material
 // For more information: https://material.angular.io/guide/theming
 @use '@angular/material' as mat;
-// Plus imports for other components in your app.
+@use './styles/mixins' as mx;
+// Design tokens (:root CSS custom properties) — see src/styles/_tokens.scss
+@use './styles/tokens';
 
 // Include the common styles for Angular Material. We include this here so that you only
 // have to load a single css file for Angular Material in your app.
@@ -18,8 +20,8 @@ $Coincapmarker-accent: mat.m2-define-palette(mat.$m2-pink-palette, A200, A100, A
 // The warn palette is optional (defaults to red).
 $Coincapmarker-warn: mat.m2-define-palette(mat.$m2-red-palette);
 
-// Create the theme object. A theme consists of configurations for individual
-// theming systems such as "color" or "typography".
+// Create the theme object. A theme consists of configurations for individual theming systems
+// such as "color" or "typography".
 $Coincapmarker-theme: mat.m2-define-light-theme(
   (
     color: (
@@ -35,7 +37,12 @@ $Coincapmarker-theme: mat.m2-define-light-theme(
 // that you are using.
 @include mat.all-component-themes($Coincapmarker-theme);
 
+html {
+  height: 100%;
+}
+
 body {
+  margin: 0;
   font-family:
     Inter,
     -apple-system,
@@ -47,13 +54,31 @@ body {
     sans-serif;
 }
 
-html,
-body {
-  height: 100%;
+// Patterns shared by several components. They live here (not in component
+// styles) because Angular's view encapsulation would duplicate them in every
+// component that needs them.
+.name-and-symbol {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  flex-wrap: wrap;
+
+  .symbol {
+    color: var(--color-text-secondary);
+  }
 }
-body {
-  margin: 0;
-  font-family: Roboto, 'Helvetica Neue', sans-serif;
+
+.negative {
+  color: var(--color-down);
+}
+
+.positive {
+  color: var(--color-up);
+}
+
+.pill {
+  border-radius: 5rem;
+  background-color: var(--surface-muted);
 }
 
 button {
@@ -61,35 +86,35 @@ button {
   border: none;
   background: none;
   border-radius: 0.5rem;
-  transition: all 0.15s ease-in-out;
+  transition: all var(--transition-fast);
   color: white;
   padding: 0.125rem 0.75rem;
 
   &.add {
-    background-color: #3498db;
-    box-shadow: -1px -1px 2px 0 #1e618dd3 inset;
+    background-color: var(--color-primary);
+    @include mx.inset-shadow(#1e618dd3);
 
     &:hover {
-      background-color: #2f90d1;
+      background-color: var(--color-primary-strong);
     }
 
     &:active {
-      background-color: #2f90d1;
-      box-shadow: 1px 1px 1px 0 #1e618dd3 inset;
+      background-color: var(--color-primary-strong);
+      @include mx.inset-shadow(#1e618dd3, $active: true);
     }
   }
 
   &.delete {
-    background-color: #e74c3c;
-    box-shadow: -1px -1px 2px 0 #992e22de inset;
+    background-color: var(--color-danger);
+    @include mx.inset-shadow(#992e22de);
 
     &:hover {
-      background-color: #d83726;
+      background-color: var(--color-danger-strong);
     }
 
     &:active {
-      background-color: #d83726;
-      box-shadow: 1px 1px 1px 0 #992e22de inset;
+      background-color: var(--color-danger-strong);
+      @include mx.inset-shadow(#992e22de, $active: true);
     }
   }
 }
@@ -112,14 +137,10 @@ body::-webkit-scrollbar {
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: #2f90d1;
+  background-color: var(--color-primary-strong);
   border-radius: 3px;
 }
 
-body {
-  height: auto;
-
-  ul {
-    padding: 0;
-  }
+body ul {
+  padding: 0;
 }

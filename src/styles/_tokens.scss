@@ -1,0 +1,39 @@
+// Design tokens: the single source of truth for colors and motion.
+// These are CSS custom properties (runtime values), so component styles can
+// use var(--…) directly without importing this file. A future dark theme only
+// needs to redeclare this block under [data-theme='dark'].
+:root {
+    // Market movement (CoinMarketCap-style palette)
+    --color-up: #16c784;
+    --color-down: #ea3943;
+
+    // Brand
+    --color-primary: #3498db; // main action background
+    --color-primary-strong: #2f90d1; // hover/active, scrollbar, scroll-to-top
+    --color-primary-disabled: #718fa3f2;
+    --color-danger: #e74c3c;
+    --color-danger-strong: #d83726;
+
+    // Text
+    --color-text-secondary: #616e85; // coin symbol next to the name
+    --color-text-muted: #9ba4ae; // hints and advice
+
+    // Borders and surfaces
+    --color-border: #eceeef;
+    --surface-base: #ffffff;
+    --surface-muted: #eff2f5; // pills: search field, inputs, price chips
+    --overlay-dark: rgba(0, 0, 0, 0.5);
+    --overlay-light: rgba(255, 255, 255, 0.575);
+
+    // Header
+    --header-bg: #c2e6fff7;
+    --header-shadow: #8fd2fff7;
+
+    // Error page
+    --color-error: #2c3e50;
+    --color-error-hover: #22303f;
+
+    // Motion
+    --transition-fast: 0.15s ease-in-out;
+    --transition-normal: 0.2s ease-in-out;
+}
