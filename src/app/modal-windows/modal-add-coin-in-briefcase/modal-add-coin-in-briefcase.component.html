@@ -16,13 +16,13 @@
     <div class="quantity-and-total-price">
         <div class="quantity">
             <label for="">Quantity: </label>
-            <div class="input">
+            <div class="input pill">
                 <input type="number" min="1" value="{{ quantity }}" (input)="onChangeQuantity($event)" />
             </div>
         </div>
         <div class="total-price">
             <div>Total price:</div>
-            <div class="price" title="{{ totalPrice | currency: 'CAD' : 'symbol-narrow' : '.5-5' }}">
+            <div class="price pill" title="{{ totalPrice | currency: 'CAD' : 'symbol-narrow' : '.5-5' }}">
                 {{ totalPrice | currency: 'CAD' : 'symbol-narrow' : '.2-2' }}
             </div>
         </div>

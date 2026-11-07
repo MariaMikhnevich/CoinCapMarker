@@ -41,19 +41,14 @@ main {
                         justify-items: flex-start;
                         gap: 0.125rem;
 
+                        // layout and .symbol color come from the global .name-and-symbol class
                         > div.name-and-symbol {
-                            display: flex;
-                            align-items: center;
-                            gap: 0.25rem;
-                            flex-wrap: wrap;
-
                             .name {
                                 font-size: 1.25rem;
                                 font-weight: 600;
                             }
 
                             .symbol {
-                                color: #616e85;
                                 position: relative;
                                 top: 0.125rem;
                             }
@@ -75,14 +70,6 @@ main {
 
                     .change-percent-24hr {
                         font-weight: 600;
-
-                        &.negative {
-                            color: #ea3943;
-                        }
-
-                        &.positive {
-                            color: #16c784;
-                        }
                     }
                 }
             }
