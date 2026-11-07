@@ -1,4 +1,4 @@
-https://riverbeaver.github.io/CoinCapMarker/
+https://mariamikhnevich.github.io/CoinCapMarker/
 
 # Coincapmarker
 
