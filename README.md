@@ -15,8 +15,8 @@ git-ignored `.env` file by `scripts/generate-env.mjs`, which npm runs
 automatically before `start`/`build`/`watch`/`test` and after `install`.
 
 1. Get free API keys (no card required):
-   - CoinCap (primary source): [coincap.io/api-key](https://coincap.io/api-key)
-   - CoinGecko (automatic fallback): [coingecko.com developer dashboard](https://www.coingecko.com/en/developers/dashboard)
+    - CoinCap (primary source): [coincap.io/api-key](https://coincap.io/api-key)
+    - CoinGecko (automatic fallback): [coingecko.com developer dashboard](https://www.coingecko.com/en/developers/dashboard)
 2. Copy `.env.example` to `.env` and paste your keys there.
 3. Run `npm install`, then `npm start` and open `http://localhost:4200/`.
 
@@ -41,7 +41,8 @@ Run `ng build` to build the project. The build artifacts will be stored in the `
 
 ## Running unit tests
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+Run `ng test` to execute the unit tests with [Vitest](https://vitest.dev) in a
+jsdom environment — no browser is required.
 
 ## Linting and formatting
 

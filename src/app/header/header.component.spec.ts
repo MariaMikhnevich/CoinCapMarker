@@ -1,9 +1,8 @@
-import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
+import { provideRouter } from '@angular/router';
 import { of } from 'rxjs';
+import { beforeEach, describe, expect, it } from 'vitest';
 import { COINS_DATA_PROVIDER } from '../core/data-provider/data-provider.token';
-import type { Coin } from '../entities/classes/coin.class';
 import { CoinsInBriefcaseService } from '../entities/services/coins-in-briefcase.service';
 import { CoinsService } from '../entities/services/coins.service';
 import { HeaderComponent } from './header.component';
@@ -14,27 +13,20 @@ describe('HeaderComponent', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [RouterTestingModule, HeaderComponent],
+            imports: [HeaderComponent],
             providers: [
-                {
-                    provide: COINS_DATA_PROVIDER,
-                    useValue: {
-                        getAssets: () => of([]),
-                        getAsset: () => of({} as Coin),
-                        getHistory: () => of([]),
-                    },
-                },
+                provideRouter([]),
+                { provide: COINS_DATA_PROVIDER, useValue: { getAssets: () => of([]) } },
                 CoinsService,
                 CoinsInBriefcaseService,
             ],
-            schemas: [NO_ERRORS_SCHEMA],
         });
         fixture = TestBed.createComponent(HeaderComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it('creates', () => {
         expect(component).toBeTruthy();
     });
 });
