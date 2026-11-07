@@ -1,12 +1,4 @@
-import {
-    ChangeDetectionStrategy,
-    Component,
-    input,
-    type OnChanges,
-    output,
-    type SimpleChanges,
-} from '@angular/core';
-import type { CoinInBriefcase } from '../entities/classes/coin-in-briefcase.class';
+import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 import type { Coin } from '../entities/classes/coin.class';
 import { ModalAddCoinInBriefcaseComponent } from './modal-add-coin-in-briefcase/modal-add-coin-in-briefcase.component';
 import { ModalBriefcaseComponent } from './modal-briefcase/modal-briefcase.component';
@@ -18,14 +10,18 @@ import { ModalBriefcaseComponent } from './modal-briefcase/modal-briefcase.compo
     imports: [ModalAddCoinInBriefcaseComponent, ModalBriefcaseComponent],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ModalWindowsComponent implements OnChanges {
+export class ModalWindowsComponent {
     public readonly isVisible = input<boolean>(false);
     public readonly coin = input<Coin | null>(null);
-    public readonly briefcase = input<CoinInBriefcase[] | null>(null);
+    public readonly isBriefcase = input<boolean>(false);
 
     public readonly closed = output<boolean>();
 
-    protected title: string = '';
+    protected readonly title = computed<string>(() => {
+        if (this.isBriefcase()) return 'Your Briefcase';
+        if (this.coin()) return 'Add Coin';
+        return '';
+    });
 
     protected close() {
         this.closed.emit(false);
@@ -33,15 +29,5 @@ export class ModalWindowsComponent implements OnChanges {
 
     protected interception(event: Event) {
         event.stopPropagation();
-    }
-
-    ngOnChanges(changes: SimpleChanges): void {
-        if (changes['coin']) {
-            this.title = 'Add Coin';
-        } else if (changes['briefcase']) {
-            this.title = 'Your Briefcase';
-        } else {
-            this.title = '';
-        }
     }
 }

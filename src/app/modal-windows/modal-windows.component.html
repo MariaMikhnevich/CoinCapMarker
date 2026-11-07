@@ -2,7 +2,7 @@
     <div class="modal-dialog" (click)="interception($event)">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 class="modal-title">{{ title }}</h3>
+                <h3 class="modal-title">{{ title() }}</h3>
                 <div title="Close" class="close" (click)="close()">×</div>
             </div>
             @if (coin(); as coin) {
@@ -10,9 +10,9 @@
                     <modal-add-coin-in-briefcase [coin]="coin" (closed)="close()"></modal-add-coin-in-briefcase>
                 </div>
             }
-            @if (briefcase(); as briefcase) {
+            @if (isBriefcase()) {
                 <div class="modal-body">
-                    <modal-briefcase [briefcase]="briefcase"></modal-briefcase>
+                    <modal-briefcase></modal-briefcase>
                 </div>
             }
         </div>
