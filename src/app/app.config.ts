@@ -5,6 +5,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { BrowserModule } from '@angular/platform-browser';
 import { provideRouter, withComponentInputBinding, withInMemoryScrolling } from '@angular/router';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { provideHighcharts } from 'highcharts-angular';
 import { COINS_DATA_PROVIDER } from './core/data-provider/data-provider.token';
 import { CoinCapV3Provider } from './core/data-provider/coincap/coincap-v3.provider';
 import { CoinGeckoProvider } from './core/data-provider/coingecko/coingecko.provider';
@@ -28,6 +29,9 @@ export const appConfig: ApplicationConfig = {
             }),
         ),
         importProvidersFrom(NgxPaginationModule, BrowserModule, MatProgressSpinnerModule),
+        // Supplies the HIGHCHARTS_LOADER token that HighchartsChartService
+        // requires; without it the chart component cannot be created at all.
+        provideHighcharts(),
         CoinCapV3Provider,
         CoinGeckoProvider,
         { provide: COINS_DATA_PROVIDER, useClass: FallbackCoinsDataProvider },

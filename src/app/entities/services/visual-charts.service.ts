@@ -1,8 +1,13 @@
 import { Injectable } from '@angular/core';
+import type { Options } from 'highcharts';
 
 @Injectable()
 export class VisualChartsService {
-    public getChartOptions(name: string, chartPoints: number[][], unit: [string, number[]]) {
+    public getChartOptions(
+        name: string,
+        chartPoints: number[][],
+        unit: [string, number[]],
+    ): Options {
         return {
             title: {
                 text: 'Price change chart',
