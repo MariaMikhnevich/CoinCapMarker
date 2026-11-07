@@ -16,8 +16,7 @@
                 Show rows
                 <select name="rows" id="rows" (change)="changeTableSize($event)">
                     @for (size of tableSizes; track size) {
-                        <option value="size">size</option>
-                        <option value="size">size</option>
+                        <option value="{{ size }}">{{ size }}</option>
                     }
                 </select>
             </div>
