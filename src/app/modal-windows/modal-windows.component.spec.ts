@@ -39,4 +39,14 @@ describe('ModalWindowsComponent', () => {
             'Add Coin',
         );
     });
+
+    it('shows the briefcase dialog in briefcase mode', () => {
+        fixture.componentRef.setInput('isVisible', true);
+        fixture.componentRef.setInput('isBriefcase', true);
+        fixture.detectChanges();
+        expect(fixture.nativeElement.querySelector('.modal-title')?.textContent?.trim()).toBe(
+            'Your Briefcase',
+        );
+        expect(fixture.nativeElement.querySelector('modal-briefcase')).not.toBeNull();
+    });
 });

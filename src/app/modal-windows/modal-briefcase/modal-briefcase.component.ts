@@ -1,7 +1,7 @@
-import { Component, type OnInit, inject, input } from '@angular/core';
+import { Component, type OnInit, inject } from '@angular/core';
+import { CurrencyPipe, DatePipe } from '@angular/common';
 import type { CoinInBriefcase } from 'src/app/entities/classes/coin-in-briefcase.class';
 import { CoinsInBriefcaseService } from 'src/app/entities/services/coins-in-briefcase.service';
-import { CurrencyPipe, DatePipe } from '@angular/common';
 
 @Component({
     selector: 'modal-briefcase',
@@ -10,9 +10,9 @@ import { CurrencyPipe, DatePipe } from '@angular/common';
     imports: [CurrencyPipe, DatePipe],
 })
 export class ModalBriefcaseComponent implements OnInit {
-    public readonly briefcase = input.required<CoinInBriefcase[]>();
-
     private readonly coinsInBriefcaseService = inject(CoinsInBriefcaseService);
+
+    protected readonly briefcase = this.coinsInBriefcaseService.briefcase;
 
     public ngOnInit(): void {
         this.briefcase().forEach((coinInBriefcase: CoinInBriefcase) => {
@@ -22,7 +22,6 @@ export class ModalBriefcaseComponent implements OnInit {
 
     protected deleteCoinFromBriefcase(coinInBriefcase: CoinInBriefcase) {
         this.coinsInBriefcaseService.removeCoin(coinInBriefcase);
-        // this.briefcase = this.coinsInBriefcaseService.getBriefcase; - ?? need check, mb move to service
     }
 
     protected getCurrentPrice(id: string): string {

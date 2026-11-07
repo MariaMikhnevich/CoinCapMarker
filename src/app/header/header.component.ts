@@ -2,7 +2,6 @@ import { Component, type OnDestroy, type OnInit, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import type { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { NgClass, AsyncPipe, DecimalPipe, PercentPipe, CurrencyPipe } from '@angular/common';
-import type { CoinInBriefcase } from '../entities/classes/coin-in-briefcase.class';
 import type { Coin } from '../entities/classes/coin.class';
 import { CoinsInBriefcaseService } from '../entities/services/coins-in-briefcase.service';
 import { CoinsService } from '../entities/services/coins.service';
@@ -29,8 +28,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
     public briefcaseValue: Observable<number>;
 
-    public briefcase: CoinInBriefcase[] | null = null;
-
     private subscription!: Subscription;
 
     isVisualBriefcase: boolean = false;
@@ -56,12 +53,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
     }
 
     openBriefcase() {
-        this.briefcase = this.coinsInBriefcaseService.getBriefcase;
         this.isVisualBriefcase = true;
     }
 
     closeBriefcase() {
-        this.briefcase = null;
         this.isVisualBriefcase = false;
     }
 
