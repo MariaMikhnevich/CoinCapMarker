@@ -1,4 +1,8 @@
 div.body {
+    // takes over from the old bootstrap .modal-body
+    padding: 1rem;
+    overflow-y: auto;
+
     div.info-and-price {
         display: flex;
         gap: 1.25rem;

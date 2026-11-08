@@ -3,11 +3,6 @@
         <error [error]="error"></error>
     </div>
 } @else {
-    <modal-windows
-        [isVisible]="isVisibleModalAddCoin()"
-        [coin]="coinTransferredByModal()"
-        (closed)="closeModal()"
-    ></modal-windows>
     <main>
         <div class="info-and-button">
             <a routerLink="/" class="go-back">

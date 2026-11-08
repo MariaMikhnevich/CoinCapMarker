@@ -2,6 +2,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, input, output } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { MatDialog } from '@angular/material/dialog';
 import { Router, provideRouter } from '@angular/router';
 import { of, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
@@ -10,6 +11,7 @@ import { Coin } from '../entities/classes/coin.class';
 import { CoinsInBriefcaseService } from '../entities/services/coins-in-briefcase.service';
 import { CoinsService } from '../entities/services/coins.service';
 import { SelectedCoinService } from '../entities/services/selected-coin.service';
+import { ModalAddCoinInBriefcaseComponent } from '../dialogs/modal-add-coin-in-briefcase/modal-add-coin-in-briefcase.component';
 import { CoinSearchComponent } from './coin-search/coin-search.component';
 import { CoinsTableComponent } from './coins-table.component';
 
@@ -37,6 +39,7 @@ const makeCoin = (id: string, priceUsd: string, changePercent24Hr = '1.5') =>
 describe('CoinsTableComponent', () => {
     let fixture: ComponentFixture<CoinsTableComponent>;
     let getAssets: ReturnType<typeof vi.fn>;
+    let open: ReturnType<typeof vi.fn>;
 
     function create() {
         fixture = TestBed.createComponent(CoinsTableComponent);
@@ -46,11 +49,13 @@ describe('CoinsTableComponent', () => {
 
     beforeEach(() => {
         getAssets = vi.fn();
+        open = vi.fn();
         TestBed.configureTestingModule({
             imports: [CoinsTableComponent],
             providers: [
                 provideRouter([]),
                 { provide: COINS_DATA_PROVIDER, useValue: { getAssets } },
+                { provide: MatDialog, useValue: { open } },
                 CoinsService,
                 CoinsInBriefcaseService,
             ],
@@ -131,11 +136,17 @@ describe('CoinsTableComponent', () => {
         expect(TestBed.inject(SelectedCoinService).selectedCoin()?.id).toBe('bitcoin');
     });
 
-    it('opens the add-coin modal from the row button', () => {
+    it('opens the add-coin dialog with the row coin', () => {
         getAssets.mockReturnValue(of([makeCoin('bitcoin', '50000')]));
         const element = create().nativeElement;
         (element.querySelector('button.add') as HTMLButtonElement).click();
         fixture.detectChanges();
-        expect(element.querySelector('.modal-title')?.textContent?.trim()).toBe('Add Coin');
+        expect(open).toHaveBeenCalledWith(
+            ModalAddCoinInBriefcaseComponent,
+            expect.objectContaining({
+                panelClass: 'app-dialog-panel',
+                data: expect.objectContaining({ id: 'bitcoin' }),
+            }),
+        );
     });
 });

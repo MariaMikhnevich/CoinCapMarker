@@ -3,11 +3,6 @@
         <error [error]="error"></error>
     </div>
 } @else {
-    <modal-windows
-        [isVisible]="isVisibleModalAddCoin"
-        [coin]="coinTransferredByModal"
-        (closed)="closeModal()"
-    ></modal-windows>
     <div class="container-table">
         <loading-indicator></loading-indicator>
         <coin-search [allCoins]="allCoins" (desiredCoinChanged)="coinsChange($event)"></coin-search>

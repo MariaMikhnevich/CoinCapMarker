@@ -1,5 +1,6 @@
 import { Component, type OnInit, inject } from '@angular/core';
 import { CurrencyPipe, DatePipe } from '@angular/common';
+import { MatDialogClose } from '@angular/material/dialog';
 import type { CoinInBriefcase } from 'src/app/entities/classes/coin-in-briefcase.class';
 import { CoinsInBriefcaseService } from 'src/app/entities/services/coins-in-briefcase.service';
 
@@ -7,7 +8,7 @@ import { CoinsInBriefcaseService } from 'src/app/entities/services/coins-in-brie
     selector: 'modal-briefcase',
     templateUrl: './modal-briefcase.component.html',
     styleUrl: './modal-briefcase.component.scss',
-    imports: [CurrencyPipe, DatePipe],
+    imports: [CurrencyPipe, DatePipe, MatDialogClose],
 })
 export class ModalBriefcaseComponent implements OnInit {
     private readonly coinsInBriefcaseService = inject(CoinsInBriefcaseService);
