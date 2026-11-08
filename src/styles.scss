@@ -103,7 +103,9 @@ body {
   border-bottom: 1px solid var(--color-border);
 }
 
-.app-dialog-title {
+// Nested under .app-dialog-header for specificity: Material's typography
+// hierarchy (.mat-typography h3, 0-1-1) would otherwise win over a bare class.
+.app-dialog-header .app-dialog-title {
   margin: 0;
   line-height: 1.5;
   font-size: 1.25rem;
