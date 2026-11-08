@@ -6,7 +6,7 @@ div.container {
     > div.coin-in-briefcase {
         display: grid;
         gap: 0.5rem;
-        border-bottom: 1px solid #eceeef;
+        border-bottom: 1px solid var(--color-border);
         padding-bottom: 0.75rem;
         cursor: pointer;
 
@@ -25,18 +25,10 @@ div.container {
                     width: 1.5rem;
                 }
 
+                // layout and .symbol color come from the global .name-and-symbol class
                 .name-and-symbol {
-                    display: flex;
-                    align-items: center;
-                    gap: 0.25rem;
-                    flex-wrap: wrap;
-
                     .name {
                         font-weight: 500;
-                    }
-
-                    .symbol {
-                        color: #616e85;
                     }
                 }
             }
@@ -48,7 +40,7 @@ div.container {
 
                 > img {
                     width: 1rem;
-                    transition: all 0.2s ease-in-out;
+                    transition: all var(--transition-normal);
                 }
 
                 > img.unwrap {

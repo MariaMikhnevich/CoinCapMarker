@@ -15,18 +15,9 @@ div.body {
             }
 
             div.name-and-symbol {
-                display: flex;
-                align-items: center;
-                gap: 0.25rem;
-                flex-wrap: wrap;
-
+                // layout and .symbol color come from the global .name-and-symbol class
                 .name {
                     font-weight: 500;
-                }
-
-                .symbol {
-                    color: #616e85;
-                    font-weight: normal;
                 }
             }
         }
@@ -49,20 +40,18 @@ div.body {
             padding-bottom: 0.625rem;
 
             > div.input {
-                border-radius: 5rem;
-                background-color: #eff2f5;
+                // shape and background come from the global .pill class
                 padding: 0.25rem 0.5rem 0.25rem 1rem;
 
                 input {
-                    background-color: #eff2f5;
+                    background-color: var(--surface-muted);
                     width: 6.5rem;
                     padding: 0;
                 }
             }
 
             > div.price {
-                border-radius: 5rem;
-                background-color: #eff2f5;
+                // shape and background come from the global .pill class
                 padding: 0.25rem 1rem;
                 box-sizing: content-box;
                 min-width: 6.5rem;
@@ -72,9 +61,9 @@ div.body {
 
     div.advice {
         font-size: 0.75rem;
-        color: #9ba4ae;
+        color: var(--color-text-muted);
         padding-bottom: 1rem;
-        border-bottom: dotted 1px #eceeef;
+        border-bottom: dotted 1px var(--color-border);
     }
 
     div.button {
@@ -90,7 +79,7 @@ div.body {
 
             &.block {
                 pointer-events: none;
-                background-color: #718fa3f2;
+                background-color: var(--color-primary-disabled);
             }
         }
     }

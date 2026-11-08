@@ -1,0 +1,9 @@
+// Inset shadow that makes flat buttons look raised by default and "pressed"
+// on :active. Used by the global .add / .delete buttons in styles.scss.
+@mixin inset-shadow($color, $active: false) {
+    @if $active {
+        box-shadow: 1px 1px 1px 0 $color inset;
+    } @else {
+        box-shadow: -1px -1px 2px 0 $color inset;
+    }
+}

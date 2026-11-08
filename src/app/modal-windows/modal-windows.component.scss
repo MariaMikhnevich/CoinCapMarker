@@ -4,7 +4,7 @@ div.model-briefcase {
     right: 0;
     bottom: 0;
     left: 0;
-    background: rgba(0, 0, 0, 0.5);
+    background: var(--overlay-dark);
     z-index: 10;
     opacity: 0;
     -webkit-transition: opacity 200ms ease-in;
@@ -43,7 +43,7 @@ div.model-briefcase {
             -webkit-flex-direction: column;
             -ms-flex-direction: column;
             flex-direction: column;
-            background-color: #fff;
+            background-color: var(--surface-base);
             -webkit-background-clip: padding-box;
             background-clip: padding-box;
             border: 1px solid rgba(0, 0, 0, 0.2);
@@ -64,7 +64,7 @@ div.model-briefcase {
                 -ms-flex-pack: justify;
                 justify-content: space-between;
                 padding: 15px;
-                border-bottom: 1px solid #eceeef;
+                border-bottom: 1px solid var(--color-border);
                 pointer-events: auto;
 
                 .modal-title {
@@ -81,14 +81,14 @@ div.model-briefcase {
                     font-size: 24px;
                     font-weight: 700;
                     line-height: 1;
-                    color: #000;
-                    text-shadow: 0 1px 0 #fff;
+                    color: var(--color-text-primary);
+                    text-shadow: 0 1px 0 var(--surface-base);
                     opacity: 0.5;
                     text-decoration: none;
 
                     &:focus,
                     &:hover {
-                        color: #000;
+                        color: var(--color-text-primary);
                         text-decoration: none;
                         cursor: pointer;
                         opacity: 0.75;
