@@ -81,14 +81,14 @@ div.model-briefcase {
                     font-size: 24px;
                     font-weight: 700;
                     line-height: 1;
-                    color: #000;
-                    text-shadow: 0 1px 0 #fff;
+                    color: var(--color-text-primary);
+                    text-shadow: 0 1px 0 var(--surface-base);
                     opacity: 0.5;
                     text-decoration: none;
 
                     &:focus,
                     &:hover {
-                        color: #000;
+                        color: var(--color-text-primary);
                         text-decoration: none;
                         cursor: pointer;
                         opacity: 0.75;
