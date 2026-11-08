@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, input, output } from '@angular/core';
+import { Component, output } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { MatDialog } from '@angular/material/dialog';
@@ -20,8 +20,7 @@ import { CoinsTableComponent } from './coins-table.component';
     template: '',
 })
 class CoinSearchStubComponent {
-    public readonly allCoins = input<Coin[]>([]);
-    public readonly desiredCoinChanged = output<{ coins: Coin[]; value: string }>();
+    public readonly searchChanged = output<string>();
 }
 
 const makeCoin = (id: string, priceUsd: string, changePercent24Hr = '1.5') =>
@@ -112,17 +111,14 @@ describe('CoinsTableComponent', () => {
         const element = create().nativeElement;
         const search = fixture.debugElement.query(By.directive(CoinSearchStubComponent));
 
-        search.componentInstance.desiredCoinChanged.emit({
-            coins: [makeCoin('ethereum', '3000')],
-            value: 'eth',
-        });
+        search.componentInstance.searchChanged.emit('eth');
         fixture.detectChanges();
         expect(element.querySelectorAll('tbody tr').length).toBe(1);
         expect(element.querySelector('.pagination-top')?.classList).toContain(
             'hide-when-searching',
         );
 
-        search.componentInstance.desiredCoinChanged.emit({ coins: [], value: '' });
+        search.componentInstance.searchChanged.emit('');
         fixture.detectChanges();
         expect(element.querySelectorAll('tbody tr').length).toBe(2);
     });

@@ -18,13 +18,14 @@ export class ModalAddCoinInBriefcaseComponent implements OnInit {
 
     private readonly dialogRef = inject(MatDialogRef<ModalAddCoinInBriefcaseComponent>);
     private readonly coinsInBriefcaseService = inject(CoinsInBriefcaseService);
+    private readonly destroyRef = inject(DestroyRef);
 
     protected minQuantity: number = 1;
     protected totalPrice: number = 0;
 
     constructor() {
         this.quantityControl.valueChanges
-            .pipe(takeUntilDestroyed(inject(DestroyRef)))
+            .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(() => this.recalculateTotalPrice());
     }
 
