@@ -1,5 +1,5 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { beforeEach, describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { Coin } from '../../entities/classes/coin.class';
 import { CoinSearchComponent } from './coin-search.component';
 
@@ -22,7 +22,7 @@ describe('CoinSearchComponent', () => {
         expect(fixture.componentInstance).toBeTruthy();
     });
 
-    it('emits the coins matching the typed text', () => {
+    it('emits the coins matching the typed text', async () => {
         const emitted: { coins: Coin[]; value: string }[] = [];
         fixture.componentInstance.desiredCoinChanged.subscribe((event) => emitted.push(event));
 
@@ -30,8 +30,22 @@ describe('CoinSearchComponent', () => {
         input.value = 'bit';
         input.dispatchEvent(new Event('input'));
 
-        expect(emitted.length).toBe(1);
+        await vi.waitFor(() => expect(emitted.length).toBe(1));
         expect(emitted[0].value).toBe('bit');
         expect(emitted[0].coins.map((coin) => coin.id)).toEqual(['bitcoin']);
+    });
+
+    it('debounces rapid keystrokes into one emission', async () => {
+        const emitted: { coins: Coin[]; value: string }[] = [];
+        fixture.componentInstance.desiredCoinChanged.subscribe((event) => emitted.push(event));
+
+        const input: HTMLInputElement = fixture.nativeElement.querySelector('input');
+        ['b', 'bi', 'bit'].forEach((value) => {
+            input.value = value;
+            input.dispatchEvent(new Event('input'));
+        });
+
+        await vi.waitFor(() => expect(emitted.length).toBe(1));
+        expect(emitted[0].value).toBe('bit');
     });
 });
