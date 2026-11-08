@@ -40,8 +40,7 @@ export class InformationAboutCoinComponent implements OnInit {
         this.error.set(error);
     }
 
-    protected addCoin(event: Event, coin: Coin) {
-        event.stopPropagation();
+    protected addCoin(coin: Coin) {
         this.dialog.open(ModalAddCoinInBriefcaseComponent, {
             panelClass: 'app-dialog-panel',
             data: coin,

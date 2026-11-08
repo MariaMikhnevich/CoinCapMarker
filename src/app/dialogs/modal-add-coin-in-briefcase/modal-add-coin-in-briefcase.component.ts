@@ -16,9 +16,15 @@ export class ModalAddCoinInBriefcaseComponent implements OnInit {
     private readonly dialogRef = inject(MatDialogRef<ModalAddCoinInBriefcaseComponent>);
     private readonly coinsInBriefcaseService = inject(CoinsInBriefcaseService);
 
-    public totalPrice: number = 0;
-    public quantity: number = 0;
-    public minQuantity: number = 1;
+    protected totalPrice: number = 0;
+    protected quantity: number = 0;
+    protected minQuantity: number = 1;
+
+    public ngOnInit(): void {
+        this.minQuantity = Math.ceil(1 / +this.coin.priceUsd);
+        this.totalPrice = +this.coin.priceUsd * this.minQuantity;
+        this.quantity = this.minQuantity;
+    }
 
     protected onChangeQuantity(event: Event) {
         const input = event.target as HTMLInputElement;
@@ -34,11 +40,5 @@ export class ModalAddCoinInBriefcaseComponent implements OnInit {
     protected addInBriefcase() {
         this.coinsInBriefcaseService.addCoin(this.coin, this.quantity);
         this.dialogRef.close();
-    }
-
-    public ngOnInit(): void {
-        this.minQuantity = Math.ceil(1 / +this.coin.priceUsd);
-        this.totalPrice = +this.coin.priceUsd * this.minQuantity;
-        this.quantity = this.minQuantity;
     }
 }
