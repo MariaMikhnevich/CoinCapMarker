@@ -1,16 +1,21 @@
-@let coinTemp = coin();
+<div class="app-dialog-header">
+    <h3 class="app-dialog-title">Add Coin</h3>
+    <button type="button" title="Close" aria-label="Close" class="app-dialog-close" mat-dialog-close>
+        ×
+    </button>
+</div>
 
 <div class="body">
     <div class="info-and-price">
         <div class="info">
-            <img src="{{ coinTemp.logo }}" alt="" />
+            <img src="{{ coin.logo }}" alt="" />
             <div class="name-and-symbol">
-                <span class="name">{{ coinTemp.name }}</span>
-                <span class="symbol">{{ coinTemp.symbol }}</span>
+                <span class="name">{{ coin.name }}</span>
+                <span class="symbol">{{ coin.symbol }}</span>
             </div>
         </div>
-        <div class="price" title="{{ coinTemp.priceUsd | currency: 'CAD' : 'symbol-narrow' : '.5-5' }}">
-            {{ coinTemp.priceUsd | currency: 'CAD' : 'symbol-narrow' : '.2-2' }} (1 pcs.)
+        <div class="price" title="{{ coin.priceUsd | currency: 'CAD' : 'symbol-narrow' : '.5-5' }}">
+            {{ coin.priceUsd | currency: 'CAD' : 'symbol-narrow' : '.2-2' }} (1 pcs.)
         </div>
     </div>
     <div class="quantity-and-total-price">

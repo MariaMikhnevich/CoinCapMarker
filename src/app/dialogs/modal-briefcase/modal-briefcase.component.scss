@@ -2,6 +2,9 @@ div.container {
     display: flex;
     flex-direction: column;
     gap: 1rem;
+    // takes over from the old bootstrap .modal-body
+    padding: 1rem;
+    overflow-y: auto;
 
     > div.coin-in-briefcase {
         display: grid;

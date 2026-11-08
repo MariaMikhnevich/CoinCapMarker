@@ -3,38 +3,30 @@ import { Component, inject, type OnInit, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { map, take } from 'rxjs';
 import { DecimalPipe, CurrencyPipe } from '@angular/common';
+import { MatDialog } from '@angular/material/dialog';
 import type { Coin } from '../entities/classes/coin.class';
 import { CoinInfoService } from '../entities/services/coin-info.service';
 import { SelectedCoinService } from '../entities/services/selected-coin.service';
 import { ErrorComponent } from '../error/error.component';
-import { ModalWindowsComponent } from '../modal-windows/modal-windows.component';
+import { ModalAddCoinInBriefcaseComponent } from '../dialogs/modal-add-coin-in-briefcase/modal-add-coin-in-briefcase.component';
 import { ChartComponent } from './chart/chart.component';
 
 @Component({
     selector: 'app-information-about-coin',
     templateUrl: './information-about-coin.component.html',
     styleUrl: './information-about-coin.component.scss',
-    imports: [
-        ErrorComponent,
-        ModalWindowsComponent,
-        ChartComponent,
-        DecimalPipe,
-        CurrencyPipe,
-        RouterLink,
-    ],
+    imports: [ErrorComponent, ChartComponent, DecimalPipe, CurrencyPipe, RouterLink],
 })
 export class InformationAboutCoinComponent implements OnInit {
     private route = inject(ActivatedRoute);
     private coinInfoService = inject(CoinInfoService);
     private selectedCoinService = inject(SelectedCoinService);
+    private dialog = inject(MatDialog);
 
     private readonly coinId = signal<string | null>(null);
 
     protected readonly coin = signal<Coin | null>(null);
     protected readonly error = signal<HttpErrorResponse | null>(null);
-
-    protected readonly isVisibleModalAddCoin = signal<boolean>(false);
-    protected readonly coinTransferredByModal = signal<Coin | null>(null);
 
     public ngOnInit() {
         this.route.paramMap.pipe(map((params) => params.get('id'))).subscribe((data) => {
@@ -48,15 +40,11 @@ export class InformationAboutCoinComponent implements OnInit {
         this.error.set(error);
     }
 
-    protected addCoin(event: Event, coin: Coin) {
-        event.stopPropagation();
-        this.isVisibleModalAddCoin.set(true);
-        this.coinTransferredByModal.set(coin);
-    }
-
-    protected closeModal() {
-        this.isVisibleModalAddCoin.set(false);
-        this.coinTransferredByModal.set(null);
+    protected addCoin(coin: Coin) {
+        this.dialog.open(ModalAddCoinInBriefcaseComponent, {
+            panelClass: 'app-dialog-panel',
+            data: coin,
+        });
     }
 
     private getCionInfo() {

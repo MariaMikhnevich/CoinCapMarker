@@ -27,9 +27,12 @@ describe('ModalBriefcaseComponent', () => {
         fixture = TestBed.createComponent(ModalBriefcaseComponent);
     });
 
-    it('creates', () => {
+    it('creates with its title', () => {
         fixture.detectChanges();
         expect(fixture.componentInstance).toBeTruthy();
+        expect(fixture.nativeElement.querySelector('.app-dialog-title')?.textContent?.trim()).toBe(
+            'Your Briefcase',
+        );
     });
 
     it('renders the entries stored in the service', () => {

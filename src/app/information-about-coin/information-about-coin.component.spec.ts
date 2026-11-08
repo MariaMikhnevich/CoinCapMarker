@@ -2,6 +2,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, input, output } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, convertToParamMap, provideRouter } from '@angular/router';
 import { of, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
@@ -46,6 +47,7 @@ describe('InformationAboutCoinComponent', () => {
                 provideRouter([]),
                 CoinInfoService,
                 { provide: COINS_DATA_PROVIDER, useValue: { getAsset } },
+                { provide: MatDialog, useValue: { open: vi.fn() } },
                 { provide: ActivatedRoute, useValue: { paramMap: of(convertToParamMap({ id })) } },
             ],
         }).overrideComponent(InformationAboutCoinComponent, {

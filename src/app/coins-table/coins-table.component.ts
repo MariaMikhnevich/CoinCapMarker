@@ -7,11 +7,12 @@ import type { HttpErrorResponse } from '@angular/common/http';
 import { debounceTime, fromEvent } from 'rxjs';
 
 import { NgxPaginationModule } from 'ngx-pagination';
+import { MatDialog } from '@angular/material/dialog';
 import { CoinsService } from '../entities/services/coins.service';
 import { SelectedCoinService } from '../entities/services/selected-coin.service';
 import type { Coin } from '../entities/classes/coin.class';
 import { ErrorComponent } from '../error/error.component';
-import { ModalWindowsComponent } from '../modal-windows/modal-windows.component';
+import { ModalAddCoinInBriefcaseComponent } from '../dialogs/modal-add-coin-in-briefcase/modal-add-coin-in-briefcase.component';
 import { LoadingIndicatorComponent } from '../loading-indicator/loading-indicator.component';
 import { CoinSearchComponent } from './coin-search/coin-search.component';
 import { WINDOW } from '../core/tokens/window.token';
@@ -22,7 +23,6 @@ import { WINDOW } from '../core/tokens/window.token';
     styleUrl: './coins-table.component.scss',
     imports: [
         ErrorComponent,
-        ModalWindowsComponent,
         LoadingIndicatorComponent,
         CoinSearchComponent,
         NgxPaginationModule,
@@ -34,6 +34,7 @@ export class CoinsTableComponent implements OnInit {
     private readonly coinsService = inject(CoinsService);
     private readonly selectedCoinService = inject(SelectedCoinService);
     private readonly router = inject(Router);
+    private readonly dialog = inject(MatDialog);
     private readonly document = inject<Document>(DOCUMENT);
     private readonly window = inject(WINDOW);
     private readonly destroyRef = inject(DestroyRef);
@@ -48,8 +49,6 @@ export class CoinsTableComponent implements OnInit {
     protected count: number = 0;
     protected tableSize: number = 100;
 
-    protected isVisibleModalAddCoin: boolean = false;
-    protected coinTransferredByModal: Coin | null = null;
     protected error: HttpErrorResponse | null = null;
 
     protected windowScrolled: boolean = false;
@@ -112,13 +111,10 @@ export class CoinsTableComponent implements OnInit {
 
     protected addCoin(event: Event, coin: Coin) {
         event.stopPropagation();
-        this.isVisibleModalAddCoin = true;
-        this.coinTransferredByModal = coin;
-    }
-
-    protected closeModal() {
-        this.isVisibleModalAddCoin = false;
-        this.coinTransferredByModal = null;
+        this.dialog.open(ModalAddCoinInBriefcaseComponent, {
+            panelClass: 'app-dialog-panel',
+            data: coin,
+        });
     }
 
     protected scrollToTop() {
