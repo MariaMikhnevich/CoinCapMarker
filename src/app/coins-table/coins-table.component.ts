@@ -98,9 +98,11 @@ export class CoinsTableComponent implements OnInit {
         this.router.navigate([`/coins/${coin.id}`]);
     }
 
-    protected coinsChange(event: { coins: Coin[]; value: string }) {
-        if (event.value !== '') {
-            this.displayedCoins = event.coins;
+    protected coinsChange(desiredCoin: string) {
+        if (desiredCoin !== '') {
+            this.displayedCoins = this.allCoins.filter((coin) =>
+                coin.name.toLowerCase().includes(desiredCoin.toLowerCase()),
+            );
             this.searchMode = true;
         } else {
             this.displayedCoins = this.allCoins;

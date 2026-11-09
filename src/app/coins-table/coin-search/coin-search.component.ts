@@ -1,23 +1,24 @@
-import { Component, input, output } from '@angular/core';
-import type { Coin } from 'src/app/entities/classes/coin.class';
+import { Component, DestroyRef, inject, output } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { debounceTime, distinctUntilChanged } from 'rxjs';
 
 @Component({
     selector: 'coin-search',
     templateUrl: './coin-search.component.html',
     styleUrl: './coin-search.component.scss',
+    imports: [ReactiveFormsModule],
 })
 export class CoinSearchComponent {
-    public readonly allCoins = input<Coin[]>([]);
+    public readonly searchChanged = output<string>();
 
-    public readonly desiredCoinChanged = output<{ coins: Coin[]; value: string }>();
+    protected readonly searchControl = new FormControl('', { nonNullable: true });
 
-    protected searchCoin(event: Event) {
-        const desiredCoin = (event.target as HTMLInputElement).value;
-        this.desiredCoinChanged.emit({
-            coins: this.allCoins().filter((coin) =>
-                coin.name.toLowerCase().includes(desiredCoin.toLowerCase()),
-            ),
-            value: desiredCoin,
-        });
+    private readonly destroyRef = inject(DestroyRef);
+
+    constructor() {
+        this.searchControl.valueChanges
+            .pipe(debounceTime(300), distinctUntilChanged(), takeUntilDestroyed(this.destroyRef))
+            .subscribe((value) => this.searchChanged.emit(value));
     }
 }

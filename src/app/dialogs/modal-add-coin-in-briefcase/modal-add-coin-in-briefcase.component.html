@@ -22,7 +22,7 @@
         <div class="quantity">
             <label for="">Quantity: </label>
             <div class="input pill">
-                <input type="number" min="1" value="{{ quantity }}" (input)="onChangeQuantity($event)" />
+                <input type="number" min="1" [formControl]="quantityControl" />
             </div>
         </div>
         <div class="total-price">

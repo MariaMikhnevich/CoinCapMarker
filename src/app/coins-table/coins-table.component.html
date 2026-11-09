@@ -5,7 +5,7 @@
 } @else {
     <div class="container-table">
         <loading-indicator></loading-indicator>
-        <coin-search [allCoins]="allCoins" (desiredCoinChanged)="coinsChange($event)"></coin-search>
+        <coin-search (searchChanged)="coinsChange($event)"></coin-search>
         <div class="pagination-top" [class.hide-when-searching]="searchMode">
             <div class="show-rows">
                 Show rows
